@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"crypto/x509"
 	"fmt"
 	"log"
@@ -22,4 +23,13 @@ func main() {
 		log.Fatalf("Failed to append CA certifcate to pool. Is the file a valid PEM?")
 	}
 	fmt.Println("Complete: Root CA loaded and trusted.")
+
+	// read the public certificate and the private key as a pair
+	cert, err := tls.LoadX509KeyPair("certs/overwhelming-minotaur.crt", "certs/overwhelming-minotaur.key")
+	if err != nil {
+		log.Fatalf("Error loading certificate keypair: %v", err)
+	}
+	fmt.Println("Complete: Identity Keypair loaded.")
+	// suppress unused variable error for now...
+	_ = cert
 }
