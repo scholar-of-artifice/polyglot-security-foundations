@@ -60,4 +60,14 @@ func main() {
 		w.Write([]byte(response))
 		fmt.Printf("Sent response: %s\n", response)
 	}
+
+	// define the server, bind and listen
+	server := &http.Server{
+		Addr:      ":9000", // listen on port 9000
+		Handler:   http.HandlerFunc(handler),
+		TLSConfig: tlsConfig, // apply the mTLS settings
+	}
+	fmt.Printf("Complete: Server is listening on port %s", server.Addr)
+	// since we already provided the certs in TLSConfig, we pass empty strings
+	log.Fatal(server.ListenAndServeTLS("", ""))
 }
