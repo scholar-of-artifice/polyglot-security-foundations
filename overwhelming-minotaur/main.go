@@ -32,8 +32,6 @@ func main() {
 		log.Fatalf("Error loading certificate keypair: %v", err)
 	}
 	fmt.Println("Complete: Identity Keypair loaded.")
-	// suppress unused variable error for now...
-	_ = cert
 
 	// configure TLS parameters
 	tlsConfig := &tls.Config{
