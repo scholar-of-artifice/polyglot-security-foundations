@@ -6,8 +6,9 @@ set -e
 # ---
 # define the container name
 VAULT_CONTAINER="vault"
-export VAULT_ADDR='http://127.0.0.1:8200'
 export VAULT_TOKEN='root'
+# make a directory to store the secrets
+mkdir -p secrets
 
 # check if vault is running yet...
 echo "⏱️ waiting for vault..."
@@ -32,7 +33,7 @@ echo "📜 generate root Certificate Authority"
 docker exec -e VAULT_TOKEN=$VAULT_TOKEN $VAULT_CONTAINER \
     vault write -field=certificate pki/root/generate/internal \
     common_name="mTLS-Example-Root-CA" \
-    ttl=48h > certs/root_ca.crt
+    ttl=48h > secrets/root_ca.crt
 echo "root Certificate Authority extracted to root_ca.crt on the host machine..."
 
 # ---
@@ -79,8 +80,6 @@ docker exec --env VAULT_TOKEN=$VAULT_TOKEN $VAULT_CONTAINER \
     token_policies="minotaur-policy" \
     token_ttl=1h \
     token_max_ttl=4h
-# make a directory to store the secrets
-mkdir -p secrets
 # fetch the RoleID and SecretID and save them locally...
 # the agen will read these files to log in
 echo "Fetching RoleID"
