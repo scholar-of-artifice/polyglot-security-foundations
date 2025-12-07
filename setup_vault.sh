@@ -32,7 +32,7 @@ echo "📜 generate root Certificate Authority"
 docker exec -e VAULT_TOKEN=$VAULT_TOKEN $VAULT_CONTAINER \
     vault write -field=certificate pki/root/generate/internal \
     common_name="mTLS-Example-Root-CA" \
-    ttl=48h > root_ca.crt
+    ttl=48h > certs/root_ca.crt
 echo "root Certificate Authority extracted to root_ca.crt on the host machine..."
 
 # ---
