@@ -25,7 +25,7 @@ RUN mkdir certs secrets
 # copy only the compiled binary from the builder stage
 COPY --from=builder /app/overwhelming-minotaur .
 # copy the vault binary from the official image
-COPY --from=hashcorp/vault:latest /bin/vault /bin/vault
+COPY --from=hashicorp/vault:latest /bin/vault /bin/vault
 
 # document that the container listen on port 9000
 EXPOSE 9000
