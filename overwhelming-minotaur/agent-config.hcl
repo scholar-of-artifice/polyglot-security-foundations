@@ -11,7 +11,7 @@ auto_auth {
             # the agent reads these files from the container's file system
             role_id_file_path = "/app/secrets/role_id"
             secret_id_file_path = "/app/secrets/secret_id"
-            remove_secret_id_file_after_reading = false
+            remove_secret_id_file_after_reading = true
         }
     }
     # store the token in a temporary file once logged in
