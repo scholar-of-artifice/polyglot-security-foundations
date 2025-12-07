@@ -58,3 +58,36 @@ docker exec -e VAULT_TOKEN=$VAULT_TOKEN $VAULT_CONTAINER \
     max_ttl="24h"
 
 echo "✅ Vault PKI configured successfully!"
+
+# ---
+echo "🤝 configure AppRole Authentication"
+# enable AppRole auth method
+docker exec -env VAULT_TOKEN=$VAULT_TOKEN $VAULT_CONTAINER \
+    vault auth enable approle || echo "AppRole already enabled"
+# create a policy that allows 'update' on the specific PKI role
+# write the policy definition to a temporary file inside the container then apply it
+docker exec --interactive --env VAULT_TOKEN=$VAULT_TOKEN $VAULT_CONTAINER \
+    vault policy write minotaur-policy - << EOF
+path "pki/issue/overwhelming-minotaur-role" {
+    capabilities = ["create", "update"]
+}
+EOF
+
+# create the AppRole and attach the policy
+docker exec --env VAULT_TOKEN=$VAULT_TOKEN $VAULT_CONTAINER \
+    vault write auth/approle/role/minotaur-auth-role \
+    token_policies="minotaur-policy" \
+    token_ttl=1h \
+    token_max_ttl=4h
+# make a directory to store the secrets
+mkdir -p secrets
+# fetch the RoleID and SecretID and save them locally...
+# the agen will read these files to log in
+echo "Fetching RoleID"
+docker exec --env VAULT_TOKEN=$VAULT_TOKEN $VAULT_CONTAINER \
+    vault read -field=role_id auth/approle/role/minotaur-auth-role/role-id > secrets/role_id
+echo "Fetching SecretID"
+docker exec --env VAULT_TOKEN=$VAULT_TOKEN $VAULT_CONTAINER \
+    vault write -force -field=secret_id auth/approle/role/minotaur-auth-role/secret-id > secrets/secret_id
+
+echo "✅ Vault AppRole configured successfully!"
