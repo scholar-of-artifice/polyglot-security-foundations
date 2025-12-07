@@ -11,7 +11,7 @@ export VAULT_TOKEN='root'
 
 # check if vault is running yet...
 echo "⏱️ waiting for vault..."
-until vault status > /dev/null 2>&1; do
+until docker exec $VAULT_CONTAINER vault status > /dev/null 2>&1; do
     echo "..."
     sleep 1
 done
