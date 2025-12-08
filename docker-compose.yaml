@@ -1,4 +1,29 @@
 services:
+  # the central secrets manager
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    ports:
+      - "8200:8200"
+    environment:
+      # starts vault in 'dev' mode
+      VAULT_DEV_ROOT_TOKEN_ID: root
+      VAULT_ADDR: "http://0.0.0.0:8200"
+    cap_add:
+      # prevent memory from being swapped to disk
+      - IPC_LOCK
+  vault-setup:
+    image: hashicorp/vault:latest
+    container_name: vault-setup
+    depends_on:
+      - vault
+    volumes:
+      # mount the initialization script
+      - ./setup_vault.sh:/setup_vault.sh
+      # mount the directory to write the role_id/secret_id
+      - ./secrets:/secrets
+    # run the script using shell
+    command: ["sh", "/setup_vault.sh"]
   # the overwhelming-minotaur service
   overwhelming-minotaur:
     build:
@@ -8,8 +33,15 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      # mount the local certs manually.
-      # this will be removed in later phases.
+      # mount the shared certs directory (target for agent, source for the app)
       - ./certs:/app/certs
-
+      # mount the secrets so the agent can log in
+      - ./secrets:/app/secrets
+      # mount the agent configuraiton
+      - ./overwhelming-minotaur/agent-config.hcl:/app/agent-config.hcl
+    depends_on:
+      vault:
+        condition: service_started
+      vault-setup:
+        condition: service_completed_successfully
 
