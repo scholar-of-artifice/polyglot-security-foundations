@@ -75,7 +75,7 @@ echo "🤝 configure AppRole Authentication"
 vault auth enable approle || echo "AppRole already enabled"
 # create a policy that allows 'update' on the specific PKI role
 # write the policy definition to a temporary file inside the container then apply it
-vault policy write minotaur-policy - << EOF
+vault policy write overwhelming-minotaur-policy - << EOF
 path "pki/issue/overwhelming-minotaur-role" {
     capabilities = ["create", "update"]
 }
@@ -90,15 +90,15 @@ path "pki/issue/siege-leviathan-role" {
 EOF
 
 # create the AppRole and attach the policy
-vault write auth/approle/role/minotaur-auth-role \
-    token_policies="minotaur-policy" \
+vault write auth/approle/role/overwhelming-minotaur-auth-role \
+    token_policies="overwhelming-minotaur-policy" \
     token_ttl=1h \
     token_max_ttl=4h
 # fetch the RoleID and SecretID and save them locally...
 # the agen will read these files to log in
 echo "Fetching RoleID"
-vault read -field=role_id auth/approle/role/minotaur-auth-role/role-id > secrets/role_id
+vault read -field=role_id auth/approle/role/overwhelming-minotaur-auth-role/role-id > secrets/role_id
 echo "Fetching SecretID"
-vault write -force -field=secret_id auth/approle/role/minotaur-auth-role/secret-id > secrets/secret_id
+vault write -force -field=secret_id auth/approle/role/overwhelming-minotaur-auth-role/secret-id > secrets/secret_id
 
 echo "✅ Vault AppRole configured successfully!"
