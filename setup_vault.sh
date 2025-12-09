@@ -55,6 +55,18 @@ vault write pki/roles/overwhelming-minotaur-role \
     allow_bare_domains=true\
     max_ttl="24h"
 
+# ---
+echo "🐍 create a role for siege-leviathan"
+# this defines the rules for the certificate
+# allowed_domains: restructs what CNs can be requested
+# allow_subdomains=true: allows 'siege-leviathan.foo', etc.
+# max_ttl: the maximum time a cert issued by this role is valid (24 hours)
+vault write pki/roles/siege-leviathan-role \
+    allowed_domains="siege-leviathan" \
+    allow_subdomains=true \
+    allow_bare_domains=true\
+    max_ttl="24h"
+
 echo "✅ Vault PKI configured successfully!"
 
 # ---
