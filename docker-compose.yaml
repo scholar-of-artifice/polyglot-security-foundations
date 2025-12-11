@@ -36,7 +36,7 @@ services:
       # mount the shared certs directory (target for agent, source for the app)
       - ./certs:/app/certs
       # mount the secrets so the agent can log in
-      - ./secrets:/app/secrets
+      - ./secrets/overwhelming-minotaur:/app/secrets
       # mount the agent configuraiton
       - ./overwhelming-minotaur/agent-config.hcl:/app/agent-config.hcl
     depends_on:

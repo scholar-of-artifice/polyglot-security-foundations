@@ -9,7 +9,7 @@ export VAULT_ADDR='http://vault:8200'
 VAULT_CONTAINER="vault"
 export VAULT_TOKEN='root'
 # make a directory to store the secrets
-mkdir -p secrets
+mkdir -p secrets/ca secrets/siege-leviathan secrets/overwhelming-minotaur
 
 # check if vault is running yet...
 echo "⏱️ waiting for vault..."
@@ -31,7 +31,7 @@ echo "📜 generate root Certificate Authority"
 # generate root Certificate Authority
 vault write -field=certificate pki/root/generate/internal \
     common_name="mTLS-Example-Root-CA" \
-    ttl=48h > secrets/root_ca.crt
+    ttl=48h > secrets/ca/root_ca.crt
 echo "root Certificate Authority extracted to root_ca.crt on the host machine..."
 
 # ---
@@ -55,6 +55,18 @@ vault write pki/roles/overwhelming-minotaur-role \
     allow_bare_domains=true\
     max_ttl="24h"
 
+# ---
+echo "🐍 create a role for siege-leviathan"
+# this defines the rules for the certificate
+# allowed_domains: restructs what CNs can be requested
+# allow_subdomains=true: allows 'siege-leviathan.foo', etc.
+# max_ttl: the maximum time a cert issued by this role is valid (24 hours)
+vault write pki/roles/siege-leviathan-role \
+    allowed_domains="siege-leviathan" \
+    allow_subdomains=true \
+    allow_bare_domains=true\
+    max_ttl="24h"
+
 echo "✅ Vault PKI configured successfully!"
 
 # ---
@@ -63,22 +75,41 @@ echo "🤝 configure AppRole Authentication"
 vault auth enable approle || echo "AppRole already enabled"
 # create a policy that allows 'update' on the specific PKI role
 # write the policy definition to a temporary file inside the container then apply it
-vault policy write minotaur-policy - << EOF
+vault policy write overwhelming-minotaur-policy - << EOF
 path "pki/issue/overwhelming-minotaur-role" {
     capabilities = ["create", "update"]
 }
 EOF
 
+# create a policy that allows 'update' on the specific PKI role
+# write the policy definition to a temporary file inside the container then apply it
+vault policy write siege-leviathan-policy - << EOF
+path "pki/issue/siege-leviathan-role" {
+    capabilities = ["create", "update"]
+}
+EOF
+
 # create the AppRole and attach the policy
-vault write auth/approle/role/minotaur-auth-role \
-    token_policies="minotaur-policy" \
+vault write auth/approle/role/overwhelming-minotaur-auth-role \
+    token_policies="overwhelming-minotaur-policy" \
     token_ttl=1h \
     token_max_ttl=4h
+
+
+# create the AppRole and attach the policy
+vault write auth/approle/role/siege-leviathan-auth-role \
+    token_policies="siege-leviathan-policy" \
+    token_ttl=1h \
+    token_max_ttl=4h
+
 # fetch the RoleID and SecretID and save them locally...
 # the agen will read these files to log in
-echo "Fetching RoleID"
-vault read -field=role_id auth/approle/role/minotaur-auth-role/role-id > secrets/role_id
-echo "Fetching SecretID"
-vault write -force -field=secret_id auth/approle/role/minotaur-auth-role/secret-id > secrets/secret_id
+echo "Fetching overwhelming-minotaur Credentials"
+vault read -field=role_id auth/approle/role/overwhelming-minotaur-auth-role/role-id > secrets/overwhelming-minotaur/role_id
+vault write -force -field=secret_id auth/approle/role/overwhelming-minotaur-auth-role/secret-id > secrets/overwhelming-minotaur/secret_id
+echo "Fetching siege-leviathan Credentials"
+vault read -field=role_id auth/approle/role/siege-leviathan-auth-role/role-id > secrets/siege-leviathan/role_id
+vault write -force -field=secret_id auth/approle/role/siege-leviathan-auth-role/secret-id > secrets/siege-leviathan/secret_id
+
 
 echo "✅ Vault AppRole configured successfully!"
