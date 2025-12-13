@@ -5,9 +5,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 # define where the Vault agent will place the certs
-CA_CERT = "/app/certs/ca.crt"
-CLIENT_CERT = "/app/certs/siege-leviathan.crt"
-CLIENT_KEY = "/app/certs/siege-leviathan.key"
+BUNDLE_CERT = "/app/certs/siege-leviathan.pem"
 
 
 @app.get("/")
@@ -19,12 +17,12 @@ async def root():
     # create a secture SLL context
     ssl_context = ssl.create_default_context(
         purpose=ssl.Purpose.SERVER_AUTH,
-        cafile=CA_CERT
+        cafile=BUNDLE_CERT
     )
     # load the client certificate and private key to prove OUR identity
     ssl_context.load_cert_chain(
-        certfile=CLIENT_CERT,
-        keyfile=CLIENT_KEY
+        certfile=BUNDLE_CERT
+        # keyfile is not needed if the private key is in the certfile
     )
     # define the tart service URL
     # NOTE: this comes from the docker-compose
