@@ -22,36 +22,17 @@ auto_auth {
     }
 }
 
-# define the template
-# this queries the pki engine and formats the output into files
-
-# verify the app will have the Root CA
+# combine certs into one file to ensure they belong to the same pairing
 template {
-    destination = "/app/certs/ca.crt"
-    contents = <<EOH
-{{- with secret "pki/issue/siege-leviathan-role" "common_name=siege-leviathan" -}}
-{{ .Data.issuing_ca }}
-{{- end -}}
-EOH
-}
-
-# query the pki engine and formats the output into files
-template {
-    destination = "/app/certs/siege-leviathan.crt"
+    destination = "/app/certs/siege-leviathan.pem"
     contents = <<EOH
 {{- with secret "pki/issue/siege-leviathan-role" "common_name=siege-leviathan" "ttl=24h" -}}
 {{ .Data.certificate }}
+{{ .Data.private_key }}
 {{ .Data.issuing_ca }}
 {{- end -}}
 EOH
 }
 
-template {
-    destination = "/app/certs/siege-leviathan.key"
-    contents = <<EOH
-{{- with secret "pki/issue/siege-leviathan-role" "common_name=siege-leviathan" "ttl=24h" -}}
-{{ .Data.private_key }}
-{{- end -}}
-EOH
-}
+
 
