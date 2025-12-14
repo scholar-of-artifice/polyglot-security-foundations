@@ -4,6 +4,11 @@
 set -e
 
 # ---
+echo "🧹 cleaning up stale credentials..."
+rm -rf /certs/*
+rm -rf /secrets/*
+
+# ---
 : "${VAULT_ADDR:?VAULT_ADDR environment variable is required}"
 export VAULT_TOKEN='root'
 # define the service names from environment variables

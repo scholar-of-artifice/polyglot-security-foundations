@@ -15,6 +15,7 @@ services:
   vault-setup:
     image: hashicorp/vault:latest
     container_name: vault-setup
+    user: root # <- TODO: change this for Linux users...
     depends_on:
       - vault
     volumes:
@@ -22,6 +23,7 @@ services:
       - ./setup_vault.sh:/setup_vault.sh
       # mount the directory to write the role_id/secret_id
       - ./secrets:/secrets
+      - ./certs:/certs
     environment:
       VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
       VAULT_HOSTNAME: "${VAULT_HOSTNAME}"
