@@ -6,7 +6,7 @@ echo "🕵️ starting Vault agent"
 vault agent -config=agent-config.hcl -exit-after-auth=false &
 
 echo "⏱️ waiting on certificates"
-until [ -f /app/certs/siege-leviathan.pem ]; do 
+until [ -f /app/certs/identity.pem ]; do 
     echo "..."
     sleep 1
 done
