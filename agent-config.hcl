@@ -1,6 +1,6 @@
-# define where the Vault server is
+
 vault {
-    address = "http://vault:8200"
+    # address is handled by VAULT_ADDR environment variable
 }
 
 # define how to authenticate (Auto-Auth)
@@ -24,13 +24,18 @@ auto_auth {
 
 # combine certs into one file to ensure they belong to the same pairing
 template {
-    destination = "/app/certs/overwhelming-minotaur.pem"
+    # standardize the output fulename
+    destination = "/app/certs/identity.pem"
     contents = <<EOH
-{{- with secret "pki/issue/overwhelming-minotaur-role" "common_name=overwhelming-minotaur" "ttl=24h" -}}
+{{- $role_name := env "VAULT_ROLE" -}}
+{{- $common_name := env "COMMON_NAME" -}}
+{{- with secret (printf "pki/issue/%s" $role_name) (printf "common_name=%s" $common_name) "ttl=24h" -}}
 {{ .Data.certificate }}
 {{ .Data.issuing_ca }}
 {{ .Data.private_key }}
 {{- end -}}
 EOH
 }
+
+
 

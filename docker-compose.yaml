@@ -2,19 +2,20 @@ services:
   # the central secrets manager
   vault:
     image: hashicorp/vault:latest
-    container_name: vault
+    container_name: ${VAULT_HOSTNAME}
     ports:
-      - "8200:8200"
+      - "${VAULT_PORT}:${VAULT_PORT}"
     environment:
       # starts vault in 'dev' mode
       VAULT_DEV_ROOT_TOKEN_ID: root
-      VAULT_ADDR: "http://0.0.0.0:8200"
+      VAULT_ADDR: "http://0.0.0.0:${VAULT_PORT}"
     cap_add:
       # prevent memory from being swapped to disk
       - IPC_LOCK
   vault-setup:
     image: hashicorp/vault:latest
     container_name: vault-setup
+    user: root # <- TODO: change this for Linux users...
     depends_on:
       - vault
     volumes:
@@ -22,6 +23,13 @@ services:
       - ./setup_vault.sh:/setup_vault.sh
       # mount the directory to write the role_id/secret_id
       - ./secrets:/secrets
+      - ./certs:/certs
+    environment:
+      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
+      VAULT_HOSTNAME: "${VAULT_HOSTNAME}"
+      VAULT_PORT: "${VAULT_PORT}"
+      OVERWHELMING_MINOTAUR_HOSTNAME: "${OVERWHELMING_MINOTAUR_HOSTNAME}"
+      SIEGE_LEVIATHAN_HOSTNAME: "${SIEGE_LEVIATHAN_HOSTNAME}"
     # run the script using shell
     command: ["sh", "/setup_vault.sh"]
   # the overwhelming-minotaur service
@@ -29,16 +37,23 @@ services:
     build:
       context: ./overwhelming-minotaur
       dockerfile: Dockerfile
-    container_name: overwhelming-minotaur
+    container_name: ${OVERWHELMING_MINOTAUR_HOSTNAME}
     ports:
-      - "9000:9000"
+      - "${OVERWHELMING_MINOTAUR_PORT}:${OVERWHELMING_MINOTAUR_PORT}"
+    environment:
+      PORT: ${OVERWHELMING_MINOTAUR_PORT}
+      CERT_FILE: ${OVERWHELMING_MINOTAUR_CERT}
+      KEY_FILE: ${OVERWHELMING_MINOTAUR_KEY}
+      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
+      VAULT_ROLE: "${OVERWHELMING_MINOTAUR_HOSTNAME}-role"
+      COMMON_NAME: "${OVERWHELMING_MINOTAUR_HOSTNAME}"
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
       - ./certs:/app/certs
       # mount the secrets so the agent can log in
       - ./secrets/overwhelming-minotaur:/app/secrets
       # mount the agent configuraiton
-      - ./overwhelming-minotaur/agent-config.hcl:/app/agent-config.hcl
+      - ./agent-config.hcl:/app/agent-config.hcl
     depends_on:
       vault:
         condition: service_started
@@ -49,16 +64,23 @@ services:
     build:
       context: ./siege-leviathan
       dockerfile: Dockerfile
-    container_name: siege-leviathan
+    container_name: ${SIEGE_LEVIATHAN_HOSTNAME}
     ports:
-      - "8003:8003"
+      - "${SIEGE_LEVIATHAN_PORT}:${SIEGE_LEVIATHAN_PORT}"
+    environment:
+      TARGET_URL: https://${OVERWHELMING_MINOTAUR_HOSTNAME}:${OVERWHELMING_MINOTAUR_PORT}
+      PORT: ${SIEGE_LEVIATHAN_PORT}
+      CERT_BUNDLE: ${SIEGE_LEVIATHAN_CERT_BUNDLE}
+      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
+      VAULT_ROLE: "${SIEGE_LEVIATHAN_HOSTNAME}-role"
+      COMMON_NAME: "${SIEGE_LEVIATHAN_HOSTNAME}"
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
       - ./certs:/app/certs
       # mount the secrets so the agent can log in
       - ./secrets/siege-leviathan:/app/secrets
       # mount the agent configuraiton
-      - ./siege-leviathan/agent-config.hcl:/app/agent-config.hcl
+      - ./agent-config.hcl:/app/agent-config.hcl
     depends_on:
       vault:
         condition: service_started
