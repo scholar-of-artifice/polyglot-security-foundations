@@ -12,11 +12,21 @@ import (
 
 func main() {
 	fmt.Println("service: overwhelming-minotaur starting...")
-	// read the Root CA certificate file from the disk
-	caCertFile, err := os.ReadFile("certs/overwhelming-minotaur.pem")
-	if err != nil {
-		log.Fatalf("Error reading CA certificate: %v", err)
+
+	// read config from environment variables
+	port := os.Getenv("PORT")
+	certFile := os.Getenv("CERT_FILE")
+	keyFile := os.Getenv("KEY_FILE")
+	if port == "" || certFile == "" || keyFile == "" {
+		log.Fatal("Error: PORT, CERT_FILE, and KEY_FILE environment variables must be set.")
 	}
+
+	// read the Root CA certificate file from the disk
+	caCertFile, err := os.ReadFile(certFile)
+	if err != nil {
+		log.Fatalf("Error reading CA certificate from %s: %v", certFile, err)
+	}
+
 	// create a new certificate pool
 	caCertPool := x509.NewCertPool() // think of this like a trusted contact list
 	// add our Root CA to the pool
@@ -27,7 +37,7 @@ func main() {
 	fmt.Println("Complete: Root CA loaded and trusted.")
 
 	// read the public certificate and the private key as a pair
-	cert, err := tls.LoadX509KeyPair("certs/overwhelming-minotaur.pem", "certs/overwhelming-minotaur.pem")
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
 	if err != nil {
 		log.Fatalf("Error loading certificate keypair: %v", err)
 	}
@@ -60,8 +70,9 @@ func main() {
 	}
 
 	// define the server, bind and listen
+	addr := fmt.Sprintf(":%s", port)
 	server := &http.Server{
-		Addr:      ":9000", // listen on port 9000
+		Addr:      addr,
 		Handler:   http.HandlerFunc(handler),
 		TLSConfig: tlsConfig, // apply the mTLS settings
 	}
