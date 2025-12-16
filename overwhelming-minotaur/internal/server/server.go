@@ -13,9 +13,9 @@ import (
 
 func New(cfg *config.Config) *http.Server {
 	// read the Root CA certificate file from the disk
-	caCertFile, err := os.ReadFile(cfg.certFile)
+	caCertFile, err := os.ReadFile(cfg.CertFile)
 	if err != nil {
-		log.Fatalf("Error reading CA certificate from %s: %v", cfg.certFile, err)
+		log.Fatalf("Error reading CA certificate from %s: %v", cfg.CertFile, err)
 	}
 
 	// create a new certificate pool
