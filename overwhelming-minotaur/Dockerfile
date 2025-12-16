@@ -7,12 +7,12 @@ WORKDIR /app
 COPY go.mod ./
 # download dependencies (if there is a go.sum you would copy it above and run this)
 RUN go mod download
-# copy the source code into the contianer
-COPY main.go .
+# copy all of the source code into the container
+COPY . .
 # compile the application
 # # CGO_ENABLED -> creates a statically linked binary (no external C library dependencies)
 # # GOOS -> ensures the build targets the correct OS of the container
-RUN CGO_ENABLED=0 GOOS=linux go build -o overwhelming-minotaur main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o overwhelming-minotaur ./cmd/overwhelming-minotaur
 
 # --- runtime ---
 # use a minimal alpine linux image for the final container to keep it small-ish
