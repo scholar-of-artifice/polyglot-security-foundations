@@ -28,7 +28,7 @@ func New(cfg *config.Config) *http.Server {
 	fmt.Println("Complete: Root CA loaded and trusted.")
 
 	// read the public certificate and the private key as a pair
-	cert, err := tls.LoadX509KeyPair(cfg.certFile, cfg.keyFile)
+	cert, err := tls.LoadX509KeyPair(cfg.CertFile, cfg.KeyFile)
 	if err != nil {
 		log.Fatalf("Error loading certificate keypair: %v", err)
 	}
