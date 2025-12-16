@@ -45,6 +45,8 @@ services:
       CERT_FILE: ${OVERWHELMING_MINOTAUR_CERT}
       KEY_FILE: ${OVERWHELMING_MINOTAUR_KEY}
       VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
+      VAULT_ROLE: "${OVERWHELMING_MINOTAUR_HOSTNAME}-role"
+      COMMON_NAME: "${OVERWHELMING_MINOTAUR_HOSTNAME}"
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
       - ./certs:/app/certs
@@ -70,6 +72,8 @@ services:
       PORT: ${SIEGE_LEVIATHAN_PORT}
       CERT_BUNDLE: ${SIEGE_LEVIATHAN_CERT_BUNDLE}
       VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
+      VAULT_ROLE: "${SIEGE_LEVIATHAN_HOSTNAME}-role"
+      COMMON_NAME: "${SIEGE_LEVIATHAN_HOSTNAME}"
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
       - ./certs:/app/certs
