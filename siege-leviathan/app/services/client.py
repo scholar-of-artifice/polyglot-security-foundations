@@ -10,11 +10,11 @@ async def send_secret_message(message: str) -> dict:
     # create a secure SSL context
     ssl_context = ssl.create_default_context(
         purpose=ssl.Purpose.SERVER_AUTH,
-        cafile=settings.BUNDLE_CERT
+        cafile=settings.CERT_BUNDLE
     )
     # load the client certificate and private key to prove OUR identity
     ssl_context.load_cert_chain(
-        certfile=settings.BUNDLE_CERT
+        certfile=settings.CERT_BUNDLE
         # keyfile is not needed if the private key is in the certfile
     )
 
