@@ -22,19 +22,13 @@ RUN uv sync --locked
 ENV PATH="/app/.venv/bin:$PATH"
 
 # --- runtime stage ---
-# copy the vault binary from the official image
-COPY --from=hashicorp/vault:latest /bin/vault /bin/vault
 # copy the source code into the contianer
 COPY app ./app
-# copy the startup script over
-COPY startup.sh .
-# make it executable
-RUN chmod +x startup.sh
 
 # document that the container listen on port 8003
 EXPOSE 8003
 # use a command that starts the agent and the app
-CMD ["./startup.sh"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
 
 
 
