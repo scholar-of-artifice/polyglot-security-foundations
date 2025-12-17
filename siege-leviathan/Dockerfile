@@ -25,7 +25,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 # copy the vault binary from the official image
 COPY --from=hashicorp/vault:latest /bin/vault /bin/vault
 # copy the source code into the contianer
-COPY main.py .
+COPY app ./app
 # copy the startup script over
 COPY startup.sh .
 # make it executable
