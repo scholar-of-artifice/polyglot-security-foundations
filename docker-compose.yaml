@@ -32,6 +32,54 @@ services:
       SIEGE_LEVIATHAN_HOSTNAME: "${SIEGE_LEVIATHAN_HOSTNAME}"
     # run the script using shell
     command: ["sh", "/setup_vault.sh"]
+  # sidecar for the vault agent serving overwhelming-minotaur 
+  vault-agent-overwhelming-minotaur:
+    image: hashicorp/vault:latest
+    container_name: vault-agent-overwhelming-minotaur
+    restart: unless-stopped
+    environment:
+      # point to central Vault service
+      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
+      # these variables populate the template in agent-config.hcl
+      VAULT_ROLE: "${OVERWHELMING_MINOTAUR_HOSTNAME}-role"
+      COMMON_NAME: "${OVERWHELMING_MINOTAUR_HOSTNAME}"
+    volumes:
+      # read-write: the agent writes the generated certs here
+      - ./certs:/app/certs
+      # read-only: the agent reads the RoleID/SecretID created by setup_vault.sh
+      - ./secrets/overwhelming-minotaur:/app/secrets
+      # mount the configuration file
+      - ./agent-config.hcl:/app/agent-config.hcl
+    command: ["vault", "agent", "-config=/app/agent-config.hcl"]
+    depends_on:
+      vault:
+        condition: service_started
+      vault-setup:
+        condition: service_completed_successfully
+  # sidecar for the vault agent serving siege-leviathan
+  vault-agent-siege-leviathan:
+    image: hashicorp/vault:latest
+    container_name: vault-agent-siege-leviathan
+    restart: unless-stopped
+    environment:
+      # point to central Vault service
+      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
+      # these variables populate the template in agent-config.hcl
+      VAULT_ROLE: "${SIEGE_LEVIATHAN_HOSTNAME}-role"
+      COMMON_NAME: "${SIEGE_LEVIATHAN_HOSTNAME}"
+    volumes:
+      # read-write: the agent writes the generated certs here
+      - ./certs:/app/certs
+      # read-only: the agent reads the RoleID/SecretID created by setup_vault.sh
+      - ./secrets/siege-leviathan:/app/secrets
+      # mount the configuration file
+      - ./agent-config.hcl:/app/agent-config.hcl
+    command: ["vault", "agent", "-config=/app/agent-config.hcl"]
+    depends_on:
+      vault:
+        condition: service_started
+      vault-setup:
+        condition: service_completed_successfully
   # the overwhelming-minotaur service
   overwhelming-minotaur:
     build:
@@ -44,21 +92,11 @@ services:
       PORT: ${OVERWHELMING_MINOTAUR_PORT}
       CERT_FILE: ${OVERWHELMING_MINOTAUR_CERT}
       KEY_FILE: ${OVERWHELMING_MINOTAUR_KEY}
-      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
-      VAULT_ROLE: "${OVERWHELMING_MINOTAUR_HOSTNAME}-role"
-      COMMON_NAME: "${OVERWHELMING_MINOTAUR_HOSTNAME}"
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
-      - ./certs:/app/certs
-      # mount the secrets so the agent can log in
-      - ./secrets/overwhelming-minotaur:/app/secrets
-      # mount the agent configuraiton
-      - ./agent-config.hcl:/app/agent-config.hcl
+      - ./certs:/app/certs:ro
     depends_on:
-      vault:
-        condition: service_started
-      vault-setup:
-        condition: service_completed_successfully
+      - vault-agent-overwhelming-minotaur
   # the siege-leviathan service
   siege-leviathan:
     build:
@@ -71,19 +109,9 @@ services:
       TARGET_URL: https://${OVERWHELMING_MINOTAUR_HOSTNAME}:${OVERWHELMING_MINOTAUR_PORT}
       PORT: ${SIEGE_LEVIATHAN_PORT}
       CERT_BUNDLE: ${SIEGE_LEVIATHAN_CERT_BUNDLE}
-      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
-      VAULT_ROLE: "${SIEGE_LEVIATHAN_HOSTNAME}-role"
-      COMMON_NAME: "${SIEGE_LEVIATHAN_HOSTNAME}"
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
-      - ./certs:/app/certs
-      # mount the secrets so the agent can log in
-      - ./secrets/siege-leviathan:/app/secrets
-      # mount the agent configuraiton
-      - ./agent-config.hcl:/app/agent-config.hcl
+      - ./certs:/app/certs:ro
     depends_on:
-      vault:
-        condition: service_started
-      vault-setup:
-        condition: service_completed_successfully
+      - vault-agent-siege-leviathan
 
