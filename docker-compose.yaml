@@ -50,7 +50,7 @@ services:
       - ./secrets/overwhelming-minotaur:/app/secrets
       # mount the configuration file
       - ./agent-config.hcl:/app/agent-config.hcl
-    command: ["vault", "agent", "-config=/app/agent-config/hcl"]
+    command: ["vault", "agent", "-config=/app/agent-config.hcl"]
     depends_on:
       vault:
         condition: service_started
@@ -74,7 +74,7 @@ services:
       - ./secrets/siege-leviathan:/app/secrets
       # mount the configuration file
       - ./agent-config.hcl:/app/agent-config.hcl
-    command: ["vault", "agent", "-config=/app/agent-config/hcl"]
+    command: ["vault", "agent", "-config=/app/agent-config.hcl"]
     depends_on:
       vault:
         condition: service_started
