@@ -94,7 +94,7 @@ services:
       KEY_FILE: ${OVERWHELMING_MINOTAUR_KEY}
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
-      - ./certs:/app/certs
+      - ./certs:/app/certs:ro
     depends_on:
       - vault-agent-overwhelming-minotaur
   # the siege-leviathan service
@@ -111,7 +111,7 @@ services:
       CERT_BUNDLE: ${SIEGE_LEVIATHAN_CERT_BUNDLE}
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
-      - ./certs:/app/certs
+      - ./certs:/app/certs:ro
     depends_on:
       - vault-agent-siege-leviathan
 
