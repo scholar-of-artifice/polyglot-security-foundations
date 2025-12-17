@@ -1,8 +1,9 @@
 import os
 import asyncio
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from app.api.routes import router
-from app.api.config import settings
+from app.core.config import settings
 
 
 @asynccontextmanager
