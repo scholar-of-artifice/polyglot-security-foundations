@@ -141,8 +141,4 @@ services:
       - "${RECKLESS_SLEUTH_PORT}:${RECKLESS_SLEUTH_PORT}"
     environment:
       PORT: ${RECKLESS_SLEUTH_PORT}
-      
-    volumes:
-      # mount the shared certs directory (target for agent, source for the app)
-      - ./certs/overwhelming-minotaur:/app/certs:ro
 
