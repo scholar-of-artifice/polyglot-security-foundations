@@ -7,7 +7,7 @@ RUN go mod download
 # copy the source code
 COPY . .
 # compile the binary
-RUN CGO_ENABLED=0 GOOS=linux go build -o reckless-sleuth ./cmd/eckless-sleuth
+RUN CGO_ENABLED=0 GOOS=linux go build -o reckless-sleuth ./cmd/reckless-sleuth
 # runtime stuff
 FROM alpine:latest
 WORKDIR /app
