@@ -52,10 +52,10 @@ services:
       - ./agent-config.hcl:/app/agent-config.hcl
     healthcheck:
       test: "test -f /app/certs/identity.pem"
-      interval: 10s       # check every x seconds
-      timeout: 10s        # wait x seconds for check to complete
-      retries: 5          # unhealth if x failures
-      start_period: 10s   # grace period for the container to boot before checking
+      interval: 1s       # check every x seconds
+      timeout: 5s        # wait x seconds for check to complete
+      retries: 10          # unhealtht if x failures
+      start_period: 5s   # grace period for the container to boot before checking
     command: ["vault", "agent", "-config=/app/agent-config.hcl"]
     depends_on:
       vault:
@@ -82,10 +82,10 @@ services:
       - ./agent-config.hcl:/app/agent-config.hcl
     healthcheck:
       test: "test -f /app/certs/identity.pem"
-      interval: 10s       # check every x seconds
-      timeout: 10s        # wait x seconds for check to complete
-      retries: 5          # unhealth if x failures
-      start_period: 10s   # grace period for the container to boot before checking
+      interval: 1s       # check every x seconds
+      timeout: 5s        # wait x seconds for check to complete
+      retries: 10          # unhealthy if x failures
+      start_period: 5s   # grace period for the container to boot before checking
     command: ["vault", "agent", "-config=/app/agent-config.hcl"]
     depends_on:
       vault:
