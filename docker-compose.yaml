@@ -45,11 +45,17 @@ services:
       COMMON_NAME: "${OVERWHELMING_MINOTAUR_HOSTNAME}"
     volumes:
       # read-write: the agent writes the generated certs here
-      - ./certs:/app/certs
+      - ./certs/overwhelming-minotaur:/app/certs
       # read-only: the agent reads the RoleID/SecretID created by setup_vault.sh
       - ./secrets/overwhelming-minotaur:/app/secrets
       # mount the configuration file
       - ./agent-config.hcl:/app/agent-config.hcl
+    healthcheck:
+      test: "test -f /app/certs/identity.pem"
+      interval: 10s       # check every x seconds
+      timeout: 10s        # wait x seconds for check to complete
+      retries: 5          # unhealth if x failures
+      start_period: 10s   # grace period for the container to boot before checking
     command: ["vault", "agent", "-config=/app/agent-config.hcl"]
     depends_on:
       vault:
@@ -69,11 +75,17 @@ services:
       COMMON_NAME: "${SIEGE_LEVIATHAN_HOSTNAME}"
     volumes:
       # read-write: the agent writes the generated certs here
-      - ./certs:/app/certs
+      - ./certs/siege-leviathan:/app/certs
       # read-only: the agent reads the RoleID/SecretID created by setup_vault.sh
       - ./secrets/siege-leviathan:/app/secrets
       # mount the configuration file
       - ./agent-config.hcl:/app/agent-config.hcl
+    healthcheck:
+      test: "test -f /app/certs/identity.pem"
+      interval: 10s       # check every x seconds
+      timeout: 10s        # wait x seconds for check to complete
+      retries: 5          # unhealth if x failures
+      start_period: 10s   # grace period for the container to boot before checking
     command: ["vault", "agent", "-config=/app/agent-config.hcl"]
     depends_on:
       vault:
@@ -94,9 +106,10 @@ services:
       KEY_FILE: ${OVERWHELMING_MINOTAUR_KEY}
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
-      - ./certs:/app/certs:ro
+      - ./certs/overwhelming-minotaur:/app/certs:ro
     depends_on:
-      - vault-agent-overwhelming-minotaur
+      vault-agent-overwhelming-minotaur:
+        condition: service_healthy
   # the siege-leviathan service
   siege-leviathan:
     build:
@@ -111,7 +124,8 @@ services:
       CERT_BUNDLE: ${SIEGE_LEVIATHAN_CERT_BUNDLE}
     volumes:
       # mount the shared certs directory (target for agent, source for the app)
-      - ./certs:/app/certs:ro
+      - ./certs/siege-leviathan:/app/certs:ro
     depends_on:
-      - vault-agent-siege-leviathan
+      vault-agent-siege-leviathan:
+        condition: service_healthy
 
