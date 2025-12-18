@@ -51,7 +51,7 @@ services:
       # mount the configuration file
       - ./agent-config.hcl:/app/agent-config.hcl
     healthcheck:
-      test: ["CMD", "test", "-f", "/app/secrets/identity.pem"]
+      test: "test -f /app/certs/identity.pem"
       interval: 10s       # check every x seconds
       timeout: 10s        # wait x seconds for check to complete
       retries: 5          # unhealth if x failures
@@ -81,7 +81,7 @@ services:
       # mount the configuration file
       - ./agent-config.hcl:/app/agent-config.hcl
     healthcheck:
-      test: ["CMD", "test", "-f", "/app/secrets/identity.pem"]
+      test: "test -f /app/certs/identity.pem"
       interval: 10s       # check every x seconds
       timeout: 10s        # wait x seconds for check to complete
       retries: 5          # unhealth if x failures
