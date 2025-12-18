@@ -18,6 +18,7 @@ func Load() *Config {
 		fmt.Println("Warning: TARGET_URL not set. defaulting to localhost...")
 		target = "https://localhost:9090"
 	}
+	fmt.Printf("reckless-sleuth starting. Targeting: %s\n", target)
 	// allow configuring the duration via env variable, default to 30
 	attemptsStr := os.Getenv("MAX_ATTEMPTS")
 	attempts, err := strconv.Atoi(attemptsStr)
