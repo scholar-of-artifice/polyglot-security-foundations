@@ -19,7 +19,7 @@ func main() {
 	// configure a client that skips verifying the server's CA
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true
+			InsecureSkipVerify: true,
 		},
 	}
 	client := &http.Client{Transport: tr}
