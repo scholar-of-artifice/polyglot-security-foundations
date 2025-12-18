@@ -33,8 +33,8 @@ func (s *Sleuth) Run() {
 	fmt.Println("Starting test run...")
 	// enter the "simulation loop"
 	for i := 1; i <= s.cfg.MaxAttempts; i++ {
-		fmt.Printf("[%d/%d]Attempting to access %s without a certificate...\n", i, maxAttempts, targetURL)
-		resp, err := client.Get(s.cfg.TargetURL)
+		fmt.Printf("[%d/%d]Attempting to access %s without a certificate...\n", i, s.cfg.MaxAttempts, s.cfg.TargetURL)
+		resp, err := s.client.Get(s.cfg.TargetURL)
 		if err != nil {
 			// this is the correct path
 			fmt.Printf("connection rejected: %v\n", err)
