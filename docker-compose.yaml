@@ -130,4 +130,16 @@ services:
     depends_on:
       vault-agent-siege-leviathan:
         condition: service_healthy
+  # the reckless-sleuth service
+  reckless-sleuth:
+    build:
+      context: ./reckless-sleuth
+      dockerfile: Dockerfile
+    container_name: ${RECKLESS_SLEUTH_HOSTNAME}
+    restart: on-failure
+    ports:
+      - "${RECKLESS_SLEUTH_PORT}:${RECKLESS_SLEUTH_PORT}"
+    environment:
+      TARGET_URL: https://${OVERWHELMING_MINOTAUR_HOSTNAME}:${OVERWHELMING_MINOTAUR_PORT}
+      PORT: ${RECKLESS_SLEUTH_PORT}
 
