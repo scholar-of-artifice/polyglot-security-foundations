@@ -15,11 +15,11 @@ func main() {
 		fmt.Println("Warning: TARGET_URL not set. defaulting to localhost...")
 		targetURL = "https://localhost:9090"
 	}
-	gmt.Printf("recless-sleuth starting. Targeting: %s\n", targetURL)
+	fmt.Printf("recless-sleuth starting. Targeting: %s\n", targetURL)
 	// configure a client that skips verifying the server's CA
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{
-			InescureSkipVerify: true
+			InsecureSkipVerify: true
 		},
 	}
 	client := &http.Client{Transport: tr}
