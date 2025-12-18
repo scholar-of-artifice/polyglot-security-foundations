@@ -50,6 +50,12 @@ services:
       - ./secrets/overwhelming-minotaur:/app/secrets
       # mount the configuration file
       - ./agent-config.hcl:/app/agent-config.hcl
+    healthcheck:
+      test: ["CMD", "test", "-f", "/vault/secrets/identity.pem"]
+      interval: 10s       # check every x seconds
+      timeout: 10s        # wait x seconds for check to complete
+      retries: 5          # unhealth if x failures
+      start_period: 10s   # grace period for the container to boot before checking
     command: ["vault", "agent", "-config=/app/agent-config.hcl"]
     depends_on:
       vault:
@@ -74,6 +80,12 @@ services:
       - ./secrets/siege-leviathan:/app/secrets
       # mount the configuration file
       - ./agent-config.hcl:/app/agent-config.hcl
+    healthcheck:
+      test: ["CMD", "test", "-f", "/vault/secrets/identity.pem"]
+      interval: 10s       # check every x seconds
+      timeout: 10s        # wait x seconds for check to complete
+      retries: 5          # unhealth if x failures
+      start_period: 10s   # grace period for the container to boot before checking
     command: ["vault", "agent", "-config=/app/agent-config.hcl"]
     depends_on:
       vault:
