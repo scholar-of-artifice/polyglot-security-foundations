@@ -98,6 +98,7 @@ services:
       context: ./overwhelming-minotaur
       dockerfile: Dockerfile
     container_name: ${OVERWHELMING_MINOTAUR_HOSTNAME}
+    restart: on-failure
     ports:
       - "${OVERWHELMING_MINOTAUR_PORT}:${OVERWHELMING_MINOTAUR_PORT}"
     environment:
@@ -116,6 +117,7 @@ services:
       context: ./siege-leviathan
       dockerfile: Dockerfile
     container_name: ${SIEGE_LEVIATHAN_HOSTNAME}
+    restart: on-failure
     ports:
       - "${SIEGE_LEVIATHAN_PORT}:${SIEGE_LEVIATHAN_PORT}"
     environment:
