@@ -108,7 +108,8 @@ services:
       # mount the shared certs directory (target for agent, source for the app)
       - ./certs:/app/certs:ro
     depends_on:
-      - vault-agent-overwhelming-minotaur
+      vault-agent-overwhelming-minotaur:
+        condition: service_healthy
   # the siege-leviathan service
   siege-leviathan:
     build:
@@ -125,5 +126,6 @@ services:
       # mount the shared certs directory (target for agent, source for the app)
       - ./certs:/app/certs:ro
     depends_on:
-      - vault-agent-siege-leviathan
+      vault-agent-siege-leviathan:
+        condition: service_healthy
 
