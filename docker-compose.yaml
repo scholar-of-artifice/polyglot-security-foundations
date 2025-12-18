@@ -130,4 +130,19 @@ services:
     depends_on:
       vault-agent-siege-leviathan:
         condition: service_healthy
+  # the reckless-sleuth service
+  reckless-sleuth:
+    build:
+      context: ./reckless-sleuth
+      dockerfile: Dockerfile
+    container_name: ${RECKLESS_SLEUTH_HOSTNAME}
+    restart: on-failure
+    ports:
+      - "${RECKLESS_SLEUTH_PORT}:${RECKLESS_SLEUTH_PORT}"
+    environment:
+      PORT: ${RECKLESS_SLEUTH_PORT}
+      
+    volumes:
+      # mount the shared certs directory (target for agent, source for the app)
+      - ./certs/overwhelming-minotaur:/app/certs:ro
 
