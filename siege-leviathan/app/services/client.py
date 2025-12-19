@@ -1,25 +1,22 @@
-import ssl
+
 import httpx
 from app.core.config import settings
+from app.core.MTLSContextManager import MTLSContextManager
+
+
+# instantiate the manager globally so it persists across requests
+mtls_manager = MTLSContextManager(cert_path=settings.CERT_BUNDLE)
 
 
 async def send_secret_message(message: str) -> dict:
     """
-    Creates a secure mTLS context and sends a message to the target service.
+    Uses the cached mTLS context to send a message to the target service.
     """
-    # create a secure SSL context
-    ssl_context = ssl.create_default_context(
-        purpose=ssl.Purpose.SERVER_AUTH,
-        cafile=settings.CERT_BUNDLE
-    )
-    # load the client certificate and private key to prove OUR identity
-    ssl_context.load_cert_chain(
-        certfile=settings.CERT_BUNDLE
-        # keyfile is not needed if the private key is in the certfile
-    )
 
     print(f"Attempting to contact {settings.TARGET_URL}...")
     try:
+        # retrieve the context
+        ssl_context = mtls_manager.get_context()
         # use httpx with the custom SSL context
         async with httpx.AsyncClient(verify=ssl_context) as client:
             response = await client.post(settings.TARGET_URL, content=message)
