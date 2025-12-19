@@ -47,7 +47,7 @@ func (cr *CertReloader) maybeReload() error {
 
 // satisfies the tls.Config.GetCertificate signature.
 // it is called by the TLS handshake logic for every new connection
-func (cr *CertReloader) GetCertificate(handshake *tls.ClientHelloInfo) (*tls.Certificate, error) {
+func (cr *CertReloader) GetCertificate(_ *tls.ClientHelloInfo) (*tls.Certificate, error) {
 	// check if there is a need to reload from disk
 	if err := cr.maybeReload(); err != nil {
 		// if cannot reload, might still be able to use old certs
