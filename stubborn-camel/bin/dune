@@ -1,0 +1,4 @@
+(executable
+ (public_name stubborn_camel)
+ (name main)
+ (libraries stubborn_camel))
