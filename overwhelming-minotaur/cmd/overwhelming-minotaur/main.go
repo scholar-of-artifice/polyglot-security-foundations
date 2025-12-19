@@ -1,9 +1,9 @@
 package main
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
-	"os"
 	"overwhelming-minotaur/internal/config"
 	"overwhelming-minotaur/internal/server"
 	"time"
@@ -16,11 +16,11 @@ func main() {
 	// wait for sidecar Vault agent
 	fmt.Printf("Checking for certificate at %s\n", cfg.CertFile)
 	for {
-		if _, err := os.Stat(cfg.CertFile); err == nil {
-			fmt.Println("Certificate found! Starting server...")
+		if _, err := tls.LoadX509KeyPair(cfg.CertFile, cfg.KeyFile); err == nil {
+			fmt.Println("Certificate found and valid! Starting server...")
 			break
 		}
-		fmt.Println("Waiting for certficate...")
+		fmt.Println("Waiting for valid certficate...")
 		time.Sleep(1 * time.Second)
 	}
 
