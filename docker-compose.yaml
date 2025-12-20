@@ -204,4 +204,23 @@ services:
     environment:
       TARGET_URL: https://${OVERWHELMING_MINOTAUR_HOSTNAME}:${OVERWHELMING_MINOTAUR_PORT}
       PORT: ${RECKLESS_SLEUTH_PORT}
+  # the stoic-sphynx service
+  stoic-sphynx:
+    build:
+      context: ./stoic-sphynx
+      dockerfile: Dockerfile
+    container_name: ${STOIC_SPHYNX_HOSTNAME}
+    restart: on-failure
+    ports:
+      - "${STOIC_SPHYNX_PORT}:${STOIC_SPHYNX_PORT}"
+    environment:
+      PORT: ${STOIC_SPHYNX_PORT}
+      CERT_FILE: ${STOIC_SPHYNX_CERT}
+      KEY_FILE: ${STOIC_SPHYNX_KEY}
+    volumes:
+      # mount the shared certs directory (target for agent, source for the app)
+      - ./certs/${STOIC_SPHYNX_HOSTNAME}:/app/certs:ro
+    depends_on:
+      vault-agent-stoic-sphynx:
+        condition: service_healthy
 
