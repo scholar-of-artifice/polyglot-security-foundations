@@ -30,6 +30,8 @@ services:
       VAULT_PORT: "${VAULT_PORT}"
       OVERWHELMING_MINOTAUR_HOSTNAME: "${OVERWHELMING_MINOTAUR_HOSTNAME}"
       SIEGE_LEVIATHAN_HOSTNAME: "${SIEGE_LEVIATHAN_HOSTNAME}"
+      STOIC_SPHYNX_HOSTNAME: "${STOIC_SPHYNX_HOSTNAME}"
+      EAGER_GRYPHON_HOSTNAME: "${EAGER_GRYPHON_HOSTNAME}"
     # run the script using shell
     command: ["sh", "/setup_vault.sh"]
   # sidecar for the vault agent serving overwhelming-minotaur 
@@ -92,6 +94,66 @@ services:
         condition: service_started
       vault-setup:
         condition: service_completed_successfully
+  # sidecar for the vault agent serving stoic-sphynx
+  vault-agent-stoic-sphynx:
+    image: hashicorp/vault:latest
+    container_name: vault-agent-${STOIC_SPHYNX_HOSTNAME}
+    restart: unless-stopped
+    environment:
+      # point to central Vault service
+      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
+      # these variables populate the template in agent-config.hcl
+      VAULT_ROLE: "${STOIC_SPHYNX_HOSTNAME}-role"
+      COMMON_NAME: "${STOIC_SPHYNX_HOSTNAME}"
+    volumes:
+      # read-write: the agent writes the generated certs here
+      - ./certs/${STOIC_SPHYNX_HOSTNAME}:/app/certs
+      # read-only: the agent reads the RoleID/SecretID created by setup_vault.sh
+      - ./secrets/${STOIC_SPHYNX_HOSTNAME}:/app/secrets
+      # mount the configuration file
+      - ./agent-config.hcl:/app/agent-config.hcl
+    healthcheck:
+      test: "test -f /app/certs/identity.pem"
+      interval: 1s       # check every x seconds
+      timeout: 5s        # wait x seconds for check to complete
+      retries: 10          # unhealtht if x failures
+      start_period: 5s   # grace period for the container to boot before checking
+    command: ["vault", "agent", "-config=/app/agent-config.hcl"]
+    depends_on:
+      vault:
+        condition: service_started
+      vault-setup:
+        condition: service_completed_successfully
+  # sidecar for the vault agent serving eager-gryphon
+  vault-agent-eager-gryphon:
+    image: hashicorp/vault:latest
+    container_name: vault-agent-${EAGER_GRYPHON_HOSTNAME}
+    restart: unless-stopped
+    environment:
+      # point to central Vault service
+      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
+      # these variables populate the template in agent-config.hcl
+      VAULT_ROLE: "${EAGER_GRYPHON_HOSTNAME}-role"
+      COMMON_NAME: "${EAGER_GRYPHON_HOSTNAME}"
+    volumes:
+      # read-write: the agent writes the generated certs here
+      - ./certs/${EAGER_GRYPHON_HOSTNAME}:/app/certs
+      # read-only: the agent reads the RoleID/SecretID created by setup_vault.sh
+      - ./secrets/${EAGER_GRYPHON_HOSTNAME}:/app/secrets
+      # mount the configuration file
+      - ./agent-config.hcl:/app/agent-config.hcl
+    healthcheck:
+      test: "test -f /app/certs/identity.pem"
+      interval: 1s       # check every x seconds
+      timeout: 5s        # wait x seconds for check to complete
+      retries: 10          # unhealtht if x failures
+      start_period: 5s   # grace period for the container to boot before checking
+    command: ["vault", "agent", "-config=/app/agent-config.hcl"]
+    depends_on:
+      vault:
+        condition: service_started
+      vault-setup:
+        condition: service_completed_successfully
   # the overwhelming-minotaur service
   overwhelming-minotaur:
     build:
@@ -142,4 +204,42 @@ services:
     environment:
       TARGET_URL: https://${OVERWHELMING_MINOTAUR_HOSTNAME}:${OVERWHELMING_MINOTAUR_PORT}
       PORT: ${RECKLESS_SLEUTH_PORT}
+  # the stoic-sphynx service
+  stoic-sphynx:
+    build:
+      context: ./stoic-sphynx
+      dockerfile: Dockerfile
+    container_name: ${STOIC_SPHYNX_HOSTNAME}
+    restart: on-failure
+    ports:
+      - "${STOIC_SPHYNX_PORT}:${STOIC_SPHYNX_PORT}"
+    environment:
+      PORT: ${STOIC_SPHYNX_PORT}
+      CERT_FILE: ${STOIC_SPHYNX_CERT}
+      KEY_FILE: ${STOIC_SPHYNX_KEY}
+    volumes:
+      # mount the shared certs directory (target for agent, source for the app)
+      - ./certs/${STOIC_SPHYNX_HOSTNAME}:/app/certs:ro
+    depends_on:
+      vault-agent-stoic-sphynx:
+        condition: service_healthy
+  # the eager-gryphon service
+  eager-gryphon:
+    build:
+      context: ./eager-gryphon
+      dockerfile: Dockerfile
+    container_name: ${EAGER_GRYPHON_HOSTNAME}
+    restart: on-failure
+    ports:
+      - "${EAGER_GRYPHON_PORT}:${EAGER_GRYPHON_PORT}"
+    environment:
+      PORT: ${EAGER_GRYPHON_PORT}
+      CERT_FILE: ${EAGER_GRYPHON_CERT}
+      KEY_FILE: ${EAGER_GRYPHON_KEY}
+    volumes:
+      # mount the shared certs directory (target for agent, source for the app)
+      - ./certs/${EAGER_GRYPHON_HOSTNAME}:/app/certs:ro
+    depends_on:
+      vault-agent-eager-gryphon:
+        condition: service_healthy
 
