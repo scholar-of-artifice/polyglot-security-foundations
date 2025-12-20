@@ -131,7 +131,7 @@ services:
     restart: unless-stopped
     environment:
       # point to central Vault service
-      VAULT_ADDR: "http://${EAGER_GRYPHON_HOSTNAME}:${VAULT_PORT}"
+      VAULT_ADDR: "http://${VAULT_HOSTNAME}:${VAULT_PORT}"
       # these variables populate the template in agent-config.hcl
       VAULT_ROLE: "${EAGER_GRYPHON_HOSTNAME}-role"
       COMMON_NAME: "${EAGER_GRYPHON_HOSTNAME}"
