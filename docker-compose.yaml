@@ -223,4 +223,23 @@ services:
     depends_on:
       vault-agent-stoic-sphynx:
         condition: service_healthy
+  # the eager-gryphon service
+  eager-gryphon:
+    build:
+      context: ./eager-gryphon
+      dockerfile: Dockerfile
+    container_name: ${EAGER_GRYPHON_HOSTNAME}
+    restart: on-failure
+    ports:
+      - "${EAGER_GRYPHON_PORT}:${EAGER_GRYPHON_PORT}"
+    environment:
+      PORT: ${EAGER_GRYPHON_PORT}
+      CERT_FILE: ${EAGER_GRYPHON_CERT}
+      KEY_FILE: ${EAGER_GRYPHON_KEY}
+    volumes:
+      # mount the shared certs directory (target for agent, source for the app)
+      - ./certs/${EAGER_GRYPHON_HOSTNAME}:/app/certs:ro
+    depends_on:
+      vault-agent-eager-gryphon:
+        condition: service_healthy
 
