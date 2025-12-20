@@ -14,6 +14,8 @@ export VAULT_TOKEN='root'
 # define the service names from environment variables
 OVERWHELMING_MINOTAUR_HOST="${OVERWHELMING_MINOTAUR_HOSTNAME?OVERWHELMING_MINOTAUR_HOSTNAME is not set!}"
 SIEGE_LEVIATHAN_HOST="${SIEGE_LEVIATHAN_HOSTNAME?SIEGE_LEVIATHAN_HOSTNAME is not set!}"
+STOIC_SPHYNX_HOST="${STOIC_SPHYNX_HOSTNAME?STOIC_SPHYNX_HOSTNAME is not set!}"
+
 VAULT_HOST="${VAULT_HOSTNAME?VAULT_HOSTNAME is not set!}"
 VAULT_P="${VAULT_PORT?VAULT_PORT is not set!}"
 
@@ -81,6 +83,18 @@ vault write pki/roles/${SIEGE_LEVIATHAN_HOST}-role \
     allow_bare_domains=true\
     max_ttl="24h"
 
+# ---
+echo " create a role for ${STOIC_SPHYNX_HOST}"
+# this defines the rules for the certificate
+# allowed_domains: restructs what CNs can be requested
+# allow_subdomains=true: allows 'stoic_sphynx.foo', etc.
+# max_ttl: the maximum time a cert issued by this role is valid (24 hours)
+vault write pki/roles/${STOIC_SPHYNX_HOST}-role \
+    allowed_domains="${STOIC_SPHYNX_HOST}" \
+    allow_subdomains=true \
+    allow_bare_domains=true\
+    max_ttl="24h"
+
 echo "✅ Vault PKI configured successfully!"
 
 # ---
@@ -116,6 +130,12 @@ vault write auth/approle/role/${SIEGE_LEVIATHAN_HOST}-auth-role \
     token_ttl=1h \
     token_max_ttl=4h
 
+# create the AppRole and attach the policy
+vault write auth/approle/role/${STOIC_SPHYNX_HOST}-auth-role \
+    token_policies="${STOIC_SPHYNX_HOST}-policy" \
+    token_ttl=1h \
+    token_max_ttl=4h
+
 # fetch the RoleID and SecretID and save them locally...
 # the agen will read these files to log in
 echo "Fetching ${OVERWHELMING_MINOTAUR_HOST} Credentials"
@@ -124,6 +144,9 @@ vault write -force -field=secret_id auth/approle/role/${OVERWHELMING_MINOTAUR_HO
 echo "Fetching ${SIEGE_LEVIATHAN_HOST} Credentials"
 vault read -field=role_id auth/approle/role/${SIEGE_LEVIATHAN_HOST}-auth-role/role-id > secrets/${SIEGE_LEVIATHAN_HOST}/role_id
 vault write -force -field=secret_id auth/approle/role/${SIEGE_LEVIATHAN_HOST}-auth-role/secret-id > secrets/${SIEGE_LEVIATHAN_HOST}/secret_id
+echo "Fetching ${STOIC_SPHYNX_HOST} Credentials"
+vault read -field=role_id auth/approle/role/${STOIC_SPHYNX_HOST}-auth-role/role-id > secrets/${STOIC_SPHYNX_HOST}/role_id
+vault write -force -field=secret_id auth/approle/role/${STOIC_SPHYNX_HOST}-auth-role/secret-id > secrets/${STOIC_SPHYNX_HOST}/secret_id
 
 
 echo "✅ Vault AppRole configured successfully!"
