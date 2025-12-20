@@ -244,6 +244,9 @@ setup.log
 # Local OPAM switch
 _opam/
 
+# we need to allow these...
+!eager-gryphon/lib/
+
 # ignore certs and keys
 *.crt
 *.key
