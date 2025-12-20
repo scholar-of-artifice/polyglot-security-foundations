@@ -26,7 +26,7 @@ echo "  - overwhelming-minotaur: ${OVERWHELMING_MINOTAUR_HOST}"
 echo "  - siege-leviathan: ${SIEGE_LEVIATHAN_HOST}"
 
 # make a directory to store the secrets
-mkdir -p secrets/ca secrets/${SIEGE_LEVIATHAN_HOST} secrets/${OVERWHELMING_MINOTAUR_HOST}
+mkdir -p secrets/ca secrets/${SIEGE_LEVIATHAN_HOST} secrets/${OVERWHELMING_MINOTAUR_HOST} secrets/${STOIC_SPHYNX_HOST} secrets/${EAGER_GRYPHON_HOST}
 
 # check if vault is running yet...
 echo "⏱️ waiting for vault..."
