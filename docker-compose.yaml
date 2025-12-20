@@ -30,6 +30,8 @@ services:
       VAULT_PORT: "${VAULT_PORT}"
       OVERWHELMING_MINOTAUR_HOSTNAME: "${OVERWHELMING_MINOTAUR_HOSTNAME}"
       SIEGE_LEVIATHAN_HOSTNAME: "${SIEGE_LEVIATHAN_HOSTNAME}"
+      STOIC_SPHYNX_HOSTNAME: "${STOIC_SPHYNX_HOSTNAME}"
+      EAGER_GRYPHON_HOSTNAME: "${EAGER_GRYPHON_HOSTNAME}"
     # run the script using shell
     command: ["sh", "/setup_vault.sh"]
   # sidecar for the vault agent serving overwhelming-minotaur 
