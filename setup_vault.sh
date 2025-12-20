@@ -130,6 +130,24 @@ path "pki/issue/${SIEGE_LEVIATHAN_HOST}-role" {
 }
 EOF
 
+
+# create a policy that allows 'update' on the specific PKI role
+# write the policy definition to a temporary file inside the container then apply it
+vault policy write ${STOIC_SPHYNX_HOST}-policy - << EOF
+path "pki/issue/${STOIC_SPHYNX_HOST}-role" {
+    capabilities = ["create", "update"]
+}
+EOF
+
+
+# create a policy that allows 'update' on the specific PKI role
+# write the policy definition to a temporary file inside the container then apply it
+vault policy write ${EAGER_GRYPHON_HOST}-policy - << EOF
+path "pki/issue/${EAGER_GRYPHON_HOST}-role" {
+    capabilities = ["create", "update"]
+}
+EOF
+
 # create the AppRole and attach the policy
 vault write auth/approle/role/${OVERWHELMING_MINOTAUR_HOST}-auth-role \
     token_policies="${OVERWHELMING_MINOTAUR_HOST}-policy" \
