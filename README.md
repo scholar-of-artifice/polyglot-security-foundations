@@ -42,19 +42,29 @@ This project simulates a high-compliance internal network where no traffic is tr
 
 <!--TODO-->
 ```mermaid
-graph TD;
+graph TD
     %% --- CA ---
-    subgraph Infrastructure [A]
-        Vault[HashiCorp Vault]
+    subgraph Infrastructure [Trust Anchor]
+        Vault[HashiCorp Vault<br/>PKI Engine]
     end
+
     %% --- overwhelming-minotaur ---
-    subgraph Server_Group [B]
-        overwhelming_minotaur_app
+    subgraph Server_Group [Host: overwhelming_minotaur]
+        direction TB
+        overwhelming_minotaur_agent[Vault Agent<br/>Sidecar]
+        overwhelming_minotaur_vol[Shared Volume<br/>(certs/)]
+        overwhelming_minotaur_app[Shared Volume<br/>mTLS Enforced]
+
+        overwhelming_minotaur_agent -- "1. Auto-Renew" --> Vault
+        overwhelming_minotaur_agent -- "2. Write .pem file" --> overwhelming_minotaur_vol
+        overwhelming_minotaur_vol -- "3. Hot Reload" --> overwhelming_minotaur_app
     end
+
     %% --- siege-levaithan ---
     subgraph Client_Group [C]
         siege_levaithan_app
     end
+
     %% --- reckless-sleuth ---
     subgraph Client_Group [D]
         reckless_sleuth_app
