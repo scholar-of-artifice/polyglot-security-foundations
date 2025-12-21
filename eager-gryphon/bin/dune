@@ -1,0 +1,4 @@
+(executable
+ (public_name eager_gryphon)
+ (name main)
+ (libraries eager_gryphon core async async_ssl))

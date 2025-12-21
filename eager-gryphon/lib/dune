@@ -1,0 +1,4 @@
+(library
+ (name eager_gryphon)
+ (public_name eager_gryphon)
+ (libraries core async))
