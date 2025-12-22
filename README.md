@@ -126,7 +126,7 @@ docker compose up --build
 
 ## 📚 Documentation
 
-- For a deeper theoretical explanation of how mTLS works, see [(What is mTLS?)](docs/deep-dive/what-is-mTLS.md)
+- For a deeper theoretical explanation of how `mTLS` works... [What is mTLS?](docs/deep-dive/what-is-mTLS.md)
 
 ## 🔮 Future Roadmap
 - `OCaml` service to demonstrate non-HTTP protocols
