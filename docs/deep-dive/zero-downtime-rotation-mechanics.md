@@ -26,7 +26,7 @@ Even highly optimized, light weight containers take non-zero time to initialize.
 
 If you scale this to hundreds of component service, databases, chaches, load blancers, and other infrastructure then the cummulative availablity drop becomes significant.
 
-#### An Ovwhelming Stampede
+#### An Overwhelming Stampede
 
 Also, if certificate issuance is cynchronized... a restart based strategy would force your entire fleet of deployed applications to reboot at the same time.
 
@@ -37,6 +37,8 @@ This causes a massive spike in usage across your cluster of machines and overwhe
 In short, we must create a `hot reload` mechanism as seen in [reloader.go](../../overwhelming-minotaur/internal/server/reloader.go). This essentially decouples the `identity lifecycle` from the `process lifecycle`. The application continues to serve existing connections using the old (valid) context while seamlessly switching to the new credentials for new incoming requests.
 
 ### What is the trade-off of using `hot reload`?
+
+There are 2 primary trade-offs of doing this.
 
 <!--TODO-->
 
