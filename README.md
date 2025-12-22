@@ -30,6 +30,8 @@ Certificates in this environment have a strict **24-hour** lifespans. Instead of
 ### 2) Zero-Downtime Rotation
 A critical challenge in mTLS is rotating certificates without killing active connections. Each service has a basic certification context management mechanism.
 
+[Zero Downtime Rotation Mechanics](docs/deep-dive/zero-downtime-rotation-mechanics.md)
+
 ### 3) Infrastructure as Code (IaC)
 The entire Public Key Infrastructure is bootstrapped automatically via the `setup_vault.sh` script. This ensures the security environment is ephemeral and idempotent which complies with cloud-native practices.
 
@@ -127,6 +129,7 @@ docker compose up --build
 ## 📚 Documentation
 
 - For a deeper theoretical explanation of how `mTLS` works... [What is mTLS?](docs/deep-dive/what-is-mTLS.md)
+- Want to know how *Zero Downtime* Key Rotation works?... [Zero Downtime Rotation Mechanics](docs/deep-dive/zero-downtime-rotation-mechanics.md)
 
 ## 🔮 Future Roadmap
 - `OCaml` service to demonstrate non-HTTP protocols
