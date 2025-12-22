@@ -40,38 +40,60 @@ No matter if you use Go or Python, I have tried to demonstrate basic procedures 
 
 This project simulates a high-compliance internal network where no traffic is trusted by default.
 
-<!--TODO-->
 ```mermaid
-graph TD
+%%{init: {'flowchart': {'nodeSpacing': 50, 'rankSpacing': 100, 'curve': 'basis'}}}%%
+flowchart LR
     %% --- CA ---
     subgraph Infrastructure [Trust Anchor]
-        Vault[HashiCorp Vault<br/>PKI Engine]
+        Vault[HashiCorp Vault<br/>PKI Engine]:::vault
     end
 
     %% --- overwhelming-minotaur ---
     subgraph Server_Group [Host: overwhelming_minotaur]
         direction TB
-        overwhelming_minotaur_agent[Vault Agent<br/>Sidecar]
-        overwhelming_minotaur_vol[Shared Volume<br/>(certs/)]
-        overwhelming_minotaur_app[Shared Volume<br/>mTLS Enforced]
+        overwhelming_minotaur_agent[Vault Agent<br/>Sidecar]:::sidecar
+        overwhelming_minotaur_vol["Shared Volume<br/>(/certs)"]
+        overwhelming_minotaur_app["Go Server<br/>(mTLS Enforced)"]:::go
 
-        overwhelming_minotaur_agent -- "1. Auto-Renew" --> Vault
+        overwhelming_minotaur_agent -- "1. Auth & Sign <br/> (POST /pki/issue)" --> Vault
         overwhelming_minotaur_agent -- "2. Write .pem file" --> overwhelming_minotaur_vol
-        overwhelming_minotaur_vol -- "3. Hot Reload" --> overwhelming_minotaur_app
+        overwhelming_minotaur_vol -- "3. Hot Reload <br/> (fsnotify)" --> overwhelming_minotaur_app
     end
 
-    %% --- siege-levaithan ---
-    subgraph Client_Group [C]
-        siege_levaithan_app
+    %% --- siege-leviathan ---
+    subgraph Client_Group [Host: siege_leviathan]
+        direction TB
+        siege_leviathan_agent[Vault Agent<br/>Sidecar]:::sidecar
+        siege_leviathan_vol["Shared Volume<br/>(/certs)"]
+        siege_leviathan_app["Python Client<br/>(Authenticated)"]:::python
+
+        siege_leviathan_agent -- "1. Auth & Sign <br/> (POST /pki/issue)" --> Vault
+        siege_leviathan_agent -- "2. Write .pem file" --> siege_leviathan_vol
+        siege_leviathan_vol -- "3. Hot Reload <br/> (mtime check)" --> siege_leviathan_app
     end
 
     %% --- reckless-sleuth ---
-    subgraph Client_Group [D]
+    subgraph Auditor_Group [Host: reckless_sleuth]
+        direction TB
+        reckless_sleuth_app["Go Client<br/>(Unauthenticated)"]:::go
+
         reckless_sleuth_app
     end
 
-    overwhelming_minotaur_app-->siege_levaithan_app
-    reckless_sleuth_app-->siege_levaithan_app
+    %% --- request/data direction ---
+    siege_leviathan_app==>|"HTTPS GET<br/>(Success)✅"|overwhelming_minotaur_app
+    reckless_sleuth_app-.->|"Connection Rejected<br/>(Handshake Fail)❌"|overwhelming_minotaur_app
+
+    %% --- styling ---
+    classDef vault fill:#FFEC6E,color:#000,stroke-width:2px;
+    classDef sidecar fill:#F7CDA9,color:#000,stroke-width:2px;
+    classDef go fill:#00ADD8,color:#000,stroke-width:2px;
+    classDef python fill:#3776AB,color:#000,stroke-width:2px;
+
+    %% --- smoothing lines as bezier curves ---
+    linkStyle default interpolate basis
+    linkStyle 6 stroke-width:6px;
+    linkStyle 7 stroke:#DC143C,stroke-width:2px;
 ```
 
 ### Components
