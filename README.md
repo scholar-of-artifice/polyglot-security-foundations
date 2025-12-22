@@ -1,6 +1,6 @@
-# Dynamic mTLS Microservices Sandbox
+# Polyglot Security Foundations
 
-A polyglot microservices environment demonstrating "Day 2" security operations with automated, short-lived certificate rotation and a centralized Public Key Iinfrastructure (PKI).
+> **A Zero-Trust orchestration sandbox demonstrating automated mTLS and secret rotation across Go and Python microservices.**
 
 ## 🧑‍💻 Technologies
 <!--technology badges here-->
