@@ -102,3 +102,31 @@ flowchart LR
 - **overwhelming-minotaur** A a secure backend server written in `Go` which enforces `mTLS`.
 - **siege-levaithan** A client application using `Python` and `FastAPI` to make `TLS` authenticated requests to the `overwhelming-minotaur`.
 - **reckless-sleuth** An application written in `Go` to simulate unwelcome agents. It serves as a negative test to prove that that unauthenticated traffic is rejected from `overwhelming-minotaur`.
+
+## ⚡️ Quick Start Guide
+
+### Prerequisites
+- Docker and Docker Compose: https://www.docker.com
+
+### Get the code
+- Download this repository
+
+### Run the System
+- Open this directory in your terminal instance
+- Run the following command
+```bash
+docker compose up --build
+```
+
+### What to Observe
+- Success: `siege-leviathan` logs `overwhelming_minotaur_responds: ...`
+    - Handshake success
+- Rejection: `reckless-sleuth` logs `connections rejected: remote error: tls: bad certificate
+    - Security boundary intact
+
+## 📚 Documentation
+
+
+## 🔮 Future Roadmap
+- `OCaml` service to demonstrate non-HTTP protocols
+- `Orchestration` using `Kubernetes` and `Heml`
