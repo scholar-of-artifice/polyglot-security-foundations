@@ -44,7 +44,43 @@ As a team or organization this requires contributors to have an advanced underst
 
 ## Go Implementation: Hooking the TLS Handshake
 
-<!--TODO-->
+The following section describes the relevant ports of code in [`overwhelming-minotaur`](../../overwhelming-minotaur/).
+
+In Go, the `http.ListenAndServe` function is provided in the standard library. It loads certificates once (typically on startup). To achieve dynamic rotation, the author must drop down a layer into the `crypto/tls` package.
+
+The documentation on the Go website often has parameters and types which mention `or else set GetCertificate.`.
+[documentation - crypto/tls](https://pkg.go.dev/crypto/tls)
+
+### What is `GetCertificate`?
+`GetCertificate` is a field in some components of the API in the `crypto/tls` module. Instead of providing a static certificate bytes, the user is to provide a function which will be called.
+
+Here is where you can see it in this project. [See the code here](https://github.com/scholar-of-artifice/polyglot-security-foundations/blob/24d1f3513eab0e6e8244517793f0fdd33ec65669/overwhelming-minotaur/internal/server/server.go#L37-L41)
+
+Every time a new client attemps a TLS handshake, the Go runtime hits this function. This gives us a just-in-time opportunity to check if the credentials have rotated.
+
+## What is `reloader`?
+
+`GetCertificate` is attached to the custom type, `reloader`.
+```go
+...
+    reloader.GetCertificate
+...
+```
+Here is a link to the definition of the type: [reloader.go](../../overwhelming-minotaur/internal/server/reloader.go)
+
+### How `CertReloader` works
+`CertReloader` is a struct which allows us to hold **credentials**. It also holds the **time stamp** to know the time when a credential was last modified.
+
+`GetCertificate` is part of the public API for this type. If a change is detected, the function reloads the new X509 key-pair.
+
+### Handling file reads safely...
+
+As an engineer, we give up  assumptions the code when reaching out to the file system. Remember, the `Vault Agent` will periodically get new credentials from the `Vault` service.
+
+We do not want to be reading credentials while the agent is mid-write. Therefore, we must tell the Operating System that we want to take a Mutex. 
+
+This establishes a guard for thread-safe access of the file.
+
 
 ## Python Implementation: Dynamic SSL Contexts
 
