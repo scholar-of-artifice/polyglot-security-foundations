@@ -38,7 +38,7 @@ In short, we must create a `hot reload` mechanism as seen in [reloader.go](../..
 
 ### Trade-off: Complexity vs Stability
 
-The trade-off is increased code complexity. Instead of leaving it to the orchestrator to manage the lifecycle, the application must be `aware` of its own configuration state. Therefore, the engineer must actually write code which inspects the certificate file(s) instead of setting parameters in a config file. This introduces risks around contention for data on the file system. The writing below, will explain how this is managed.
+The trade-off is increased code complexity. Instead of leaving it to the orchestrator to manage the lifecycle, the application must be `aware` of its own configuration state. Therefore, the engineer must actually write code which inspects the certificate file(s) instead of setting parameters in a config file. This introduces risks around contention for data on the file system. The writing below will explain how this is managed.
 
 As a team or organization this requires contributors to have an advanced understanding of a given implementation language (concurrency primitives, run time behaviour, etc.).
 
@@ -46,7 +46,7 @@ As a team or organization this requires contributors to have an advanced underst
 
 The following section describes the relevant parts of code in [`overwhelming-minotaur`](../../overwhelming-minotaur/).
 
-In Go, the `http.ListenAndServe` function is provided in the standard library. It loads certificates once (typically on startup). To achieve dynamic rotation, the author must drop down a layer into the `crypto/tls` package.
+In Go, the `http.ListenAndServeTLS` function is provided in the standard library. It loads certificates once (typically on startup). To achieve dynamic rotation, the author must drop down a layer into the `crypto/tls` package.
 
 The documentation on the Go website often has parameters and types which mention `or else set GetCertificate.`.
 [documentation - crypto/tls](https://pkg.go.dev/crypto/tls)
@@ -89,7 +89,7 @@ This establishes a guard for thread-safe access of the file.
 
 <!--TODO-->
 
-## Edge Cases & Safey
+## Edge Cases & Safety
 
 <!--TODO-->
 
@@ -101,7 +101,7 @@ This establishes a guard for thread-safe access of the file.
 
 <!--TODO-->
 
-### Graceful Degredation
+### Graceful Degradation
 
 <!--TODO-->
 
