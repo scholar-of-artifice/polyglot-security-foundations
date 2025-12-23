@@ -87,7 +87,19 @@ This establishes a guard for thread-safe access of the file.
 
 ## Python Implementation: Dynamic SSL Contexts
 
-<!--TODO-->
+The following section describes the relevant parts of code in [`siege-leviathan`](../../siege-leviathan/).
+
+While Go allows us to hook into the handshake via `GetCertificate`, Python's `ssl` library works slightly differently. When acting as a client, we typically create an `ssl.SSLContext` once and reuse it for connection pooling.
+
+However, if we need to support credential rotation, we cannot instantiate the context only at startup. There needs to be a mechanism that checks the freshness of certificates before every new connection attempt.
+
+### `MTLSContextManager`
+
+The standard logic has been wrapped in a custom type called `MTLSContextManager`. The implementation is here: [`MTLSContextManager.py`](../../siege-leviathan/app/core/MTLSContextManager.py).
+
+Instead of relying on the web framework to handle SSL, there needs to be an explicit management of the context lifecylce. This 
+
+##
 
 ## Edge Cases & Safety
 
