@@ -77,7 +77,7 @@ Here is a link to the definition of the type: [reloader.go](../../overwhelming-m
 GetCertificate func(*ClientHelloInfo) (*Certificate, error)
 ```
 
-### Handling file reads safely...
+### Handling file reads safely
 
 As an engineer, we give up  assumptions about our programs when reaching out to the file system. Remember, the `Vault Agent` will periodically get new credentials from the `Vault` service and overwrite the old file.
 
