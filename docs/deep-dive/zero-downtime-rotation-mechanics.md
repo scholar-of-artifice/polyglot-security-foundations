@@ -36,11 +36,11 @@ This causes a massive spike in usage across your cluster of machines and overwhe
 
 In short, we must create a `hot reload` mechanism as seen in [reloader.go](../../overwhelming-minotaur/internal/server/reloader.go). This essentially decouples the `identity lifecycle` from the `process lifecycle`. The application continues to serve existing connections using the old (valid) context while seamlessly switching to the new credentials for new incoming requests.
 
-### What is the trade-off of using `hot reload`?
+### Trade-off: Complexity vs Stability
 
-There are 2 primary trade-offs of doing this.
+The trade-off is increased code complexity. Instead of leaving it to the orchestrator to manage the lifecycle, the application must be `aware` of its own configuration state. Therefore, the engineer must actually write code which inspects the certificate file(s) instead of setting parameters in a config file. This introduces risks around contention for data on the file system. The writing below, will explain how this is managed.
 
-<!--TODO-->
+As a team or organization this requires contributors to have an advanced understanding of a given implementation language (concurrency primitives, run time behaviour, etc.).
 
 ## Go Implementation: Hooking the TLS Handshake
 
