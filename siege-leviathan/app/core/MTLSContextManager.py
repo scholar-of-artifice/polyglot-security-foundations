@@ -56,3 +56,4 @@ class MTLSContextManager:
                 else:
                     # there might not be an old context...
                     raise
+            return self.ssl_context
