@@ -2,7 +2,7 @@
 
 > *You win battles by knowing the enemy's timing, and using a timing which the enemy does not expect. -Miyamoto Musashi*
 
-In this article, you will learn why keys are rotated and how we automated this process in this applicaiton. You will also see how the `Hot Reload` mechanics work in the various services written in Go and Python.
+In this article, you will learn why keys are rotated and how we automated this process in this application. You will also see how the `Hot Reload` mechanics work in the various services written in Go and Python.
 
 ## The Engineering Challenge
 
@@ -24,11 +24,11 @@ You can imagine how inconvenient this is in the modern world where applications 
 
 Even highly optimized, light weight containers take non-zero time to initialize. Some image has to be downloaded, read from storage, initialized, and some IO is partitioned. During this time, the service is not available and is effectively down.
 
-If you scale this to hundreds of component service, databases, chaches, load blancers, and other infrastructure then the cummulative availablity drop becomes significant.
+If you scale this to hundreds of component services, databases, caches, load balncers, and other infrastructure then the cumulative availablity drop becomes significant.
 
 #### An Overwhelming Stampede
 
-Also, if certificate issuance is cynchronized... a restart based strategy would force your entire fleet of deployed applications to reboot at the same time.
+Also, if certificate issuance is synchronized... a restart based strategy would force your entire fleet of deployed applications to reboot at the same time.
 
 This causes a massive spike in usage across your cluster of machines and overwhelm upstream dependencies. Possibly you can effectively DDOS yourself.
 
