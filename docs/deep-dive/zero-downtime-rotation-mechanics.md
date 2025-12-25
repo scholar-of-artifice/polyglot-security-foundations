@@ -30,7 +30,7 @@ If you scale this to hundreds of component services, databases, caches, load bal
 
 Also, if certificate issuance is synchronized... a restart based strategy would force your entire fleet of deployed applications to reboot at the same time.
 
-This causes a massive spike in usage across your cluster of machines and overwhelm upstream dependencies. Possibly you can effectively DDOS yourself.
+This causes a massive spike in usage across your cluster of machines and overwhelms upstream dependencies. Possibly you can effectively DDOS yourself.
 
 ### How can we address short credential lifespans without container restarts?
 
@@ -97,7 +97,7 @@ However, if we need to support credential rotation, we cannot instantiate the co
 
 The standard logic has been wrapped in a custom type called `MTLSContextManager`. The implementation is here: [`MTLSContextManager.py`](../../siege-leviathan/app/core/MTLSContextManager.py).
 
-Instead of relying on the web framework to handle SSL, there needs to be an explicit management of the context lifecylce.
+Instead of relying on the web framework to handle SSL, there needs to be an explicit management of the context lifecycle.
 The `MTLSContextManager` wraps the loading logic in a `try... except` block catching `ssl.SSLError` and `OSError`.
 If a partial write is detected, it catches the exception, logs a warning, and falls back to the existing `ssl_context`.
 This means the service does not crash during rotation.

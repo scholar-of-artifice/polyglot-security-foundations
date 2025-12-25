@@ -1,8 +1,8 @@
 # Infrastructure as Code (IaC) Bootstrapping
 
-> *If opportunity doesn't knock, build a door. -Miilton Berle*
+> *If opportunity doesn't knock, build a door. -Milton Berle*
 
-In this article, you will get a brief rundown of `setup-vault.sh`.
+In this article, you will get a brief rundown of `setup_-_vault.sh`.
 You will get an explanation of the important parts and their purpose.
 This way, you may understand what is required to setup Vault for cloud deployments.
 

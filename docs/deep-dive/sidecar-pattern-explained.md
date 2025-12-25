@@ -6,7 +6,7 @@ In this article, you will learn about the sidecar architecture pattern and its r
 
 ## What is the Sidecar Pattern?
 
-The Sidecar architecture pattern involves deploying a auxiliary application alongside a target (primary) application. These application live in distinct containers but are networked together.
+The Sidecar architecture pattern involves deploying an auxiliary application alongside a target (primary) application. These applications live in distinct containers but are networked together.
 
 In this project, a **Vault Agent** sidecar runs next to every service.
 
@@ -21,7 +21,7 @@ The exact things required for a sidecar, depend on the role of that sidecar. In 
 
 ### 1) Shared Volume
 The agent needs a place to write credentials. The application needs a place to read credentials.
-Here is an example for the `vault-agent-overwhelming-minotaur` and app `overwhelming-minotaur` do this: 
+Here is an example for the `vault-agent-overwhelming-minotaur` and  `overwhelming-minotaur` pairing: 
 ➡️ [`vault-agent-overwhelming-minotaur`](https://github.com/scholar-of-artifice/polyglot-security-foundations/blob/e6ddcb907e770a6d68510799f014402e6eb851a4/docker-compose.yaml#L48-L50)
 ➡️ [`overwhelming-minotaur`](https://github.com/scholar-of-artifice/polyglot-security-foundations/blob/e6ddcb907e770a6d68510799f014402e6eb851a4/docker-compose.yaml#L170-L172)
 
@@ -51,8 +51,8 @@ The **Vault Agent** automatically renews the certificate before it expires and o
 
 ## How does the "Auto-Authorization" method work in the sandbox?
 
-This project makes use of the `approle` autho-auth method.
-1) The `setup_vault.sh` script write a `role_id` and `secret_id` to a specific folder on the host.
+This project makes use of the `approle` auto-auth method.
+1) The `setup_vault.sh` script writes a `role_id` and `secret_id` to a specific folder on the host.
 2) The **Vault Agent** container mounts this folder at `/app/secrets/`
 3) When the system starts, the Agent reads the files to authenticate with Vault, obtains a token and begins managing the certificate lifecycle.
 
