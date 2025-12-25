@@ -1,5 +1,6 @@
-
 # 🔐 What is mTLS?
+
+> *Distrust and caution are the parents of security. -Benjamin Franklin*
 
 `mTLS` (Mutual Transport Layer Security) is a protocol that ensures two-way authentication between a client and a server. Unlike standard `TLS` (one-way TLS), where only the server verifies its identity to the client, `mTLS` requires both the client and the server to present and validate cryptographic certificates during the connection handshake.
 
