@@ -128,7 +128,8 @@ docker compose up --build
 
 ## 📚 Documentation
 
-- For a deeper theoretical explanation of how `mTLS` works... [What is mTLS?](docs/deep-dive/what-is-mTLS.md)
+- For a deeper explanation of how `mTLS` works... [What is mTLS?](docs/deep-dive/what-is-mTLS.md)
+- Want a deeper explanation of `setup_vault.sh`?... [Infrastructure as Code Boostrapping](docs/deep-dive/infrastructure-as-code-bootstrapping.md)
 - Want to know how *Zero Downtime* Key Rotation works?... [Zero Downtime Rotation Mechanics](docs/deep-dive/zero-downtime-rotation-mechanics.md)
 
 ## 🔮 Future Roadmap
