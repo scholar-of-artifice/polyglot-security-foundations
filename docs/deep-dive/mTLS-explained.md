@@ -16,12 +16,12 @@ A secure connection is only established after both parties confirm the validity 
 ### Enhanced Security
 By requiring the client to prove its identity, `mTLS` significantly improves security, preventing unauthorized access even if standard credential-based authentication (like usernames/passwords) is compromised or bypassed.
 
-# Resources
+## Resources
 
 https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Transport_Layer_Security
 
 https://wiki.mozilla.org/Security/Server_Side_TLS
 
-https://www.youtube.com/watch?v=b38k2GiLDdc
+<iframe width="560" height="315" src="https://www.youtube.com/embed/b38k2GiLDdc?si=m_38AH1JBhTAT5BH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-https://www.youtube.com/watch?v=uWmZZyaHFEY
+<iframe width="560" height="315" src="https://www.youtube.com/embed/uWmZZyaHFEY?si=m6z0l9WXEHYg_9CB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

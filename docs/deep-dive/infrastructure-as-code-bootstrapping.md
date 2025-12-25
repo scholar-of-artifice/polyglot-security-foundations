@@ -56,3 +56,7 @@ The script generates Vault policies that grant permission to `update` certificat
 ### Credential Delivery
 The script retrieves the `role_id` and `secret_id` for each service and writes them to a shared volume (`secrets/`).
 This simulates a secure credential delivery mechanism that the `vault-agent`s will later consume.
+
+## Resources
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/klyAhaklGNU?si=s_3gT2tablCOw2jY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
