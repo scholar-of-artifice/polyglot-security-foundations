@@ -27,6 +27,8 @@ Instead of relying on static, long-lived, `.pem` files that are easily compromis
 ### 1) Dynamic Secret Injection
 Certificates in this environment have a strict **24-hour** lifespans. Instead of hard coded credentials, **Vault Agents** run as sidecars to the application containers. They handle the authentication with Vault, fetch the certificates and render them to a shared volume.
 
+[Sidecar Pattern Explained](docs/deep-dive/sidecar-pattern-explained.md)
+
 ### 2) Zero-Downtime Rotation
 A critical challenge in mTLS is rotating certificates without killing active connections. Each service has a basic certification context management mechanism.
 
@@ -34,6 +36,8 @@ A critical challenge in mTLS is rotating certificates without killing active con
 
 ### 3) Infrastructure as Code (IaC)
 The entire Public Key Infrastructure is bootstrapped automatically via the `setup_vault.sh` script. This ensures the security environment is ephemeral and idempotent which complies with cloud-native practices.
+
+[Infrastructure as Code Boostrapping](docs/deep-dive/infrastructure-as-code-bootstrapping.md)
 
 ### 4) Multiple Technology Showcase
 No matter if you use Go or Python, I have tried to demonstrate basic procedures you will likely need to adopt in your project.
@@ -128,9 +132,10 @@ docker compose up --build
 
 ## 📚 Documentation
 
-- For a deeper explanation of how `mTLS` works... [What is mTLS?](docs/deep-dive/what-is-mTLS.md)
+- For a deeper explanation of how **mTLS** works... [What is mTLS?](docs/deep-dive/what-is-mTLS.md)
+- Want to know about the **Sidecar Architecture Pattern** in this project?... [Sidecar Pattern Explained](docs/deep-dive/sidecar-pattern-explained.md)
+- Want to know how **Zero Downtime Key Rotation** works?... [Zero Downtime Rotation Mechanics](docs/deep-dive/zero-downtime-rotation-mechanics.md)
 - Want a deeper explanation of `setup_vault.sh`?... [Infrastructure as Code Boostrapping](docs/deep-dive/infrastructure-as-code-bootstrapping.md)
-- Want to know how *Zero Downtime* Key Rotation works?... [Zero Downtime Rotation Mechanics](docs/deep-dive/zero-downtime-rotation-mechanics.md)
 
 ## 🔮 Future Roadmap
 - `OCaml` service to demonstrate non-HTTP protocols
