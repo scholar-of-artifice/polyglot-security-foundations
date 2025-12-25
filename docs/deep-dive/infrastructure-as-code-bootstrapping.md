@@ -45,6 +45,8 @@ The certificates are strictly limited to 24 hours but feel free to change this f
 ## Authentication
 Instead of using root tokens, services authenticate using the **App Role** method, which is optimized for machine-machine authentication.
 
+You can find out more about auto-authentication here: https://developer.hashicorp.com/vault/docs/agent-and-proxy/autoauth
+
 ### Policies
 The script generates Vault policies that grant permission to `update` certificates only against the specific role assigned to that service.
 
