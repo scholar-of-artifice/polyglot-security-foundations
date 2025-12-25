@@ -1,12 +1,12 @@
 # Infrastructure as Code (IaC) Bootstrapping
 
-> *If opportunity doesn't knock, build a door. -Miilton Berle*
+> *If opportunity doesn't knock, build a door. -Milton Berle*
 
-In this article, you will get a brief rundown of `setup-vault.sh`.
+In this article, you will get a brief rundown of `setup_-_vault.sh`.
 You will get an explanation of the important parts and their purpose.
 This way, you may understand what is required to setup Vault for cloud deployments.
 
-## How do we bootsrap a Root CA and an Intermediate
+## How do we bootstrap a Root CA and an Intermediate
 In this project, the entire Public Key Infrastructure (PKI) is ephemeral.
 Every time the environment starts, a fresh Root Certificate Authority (CA) is generated.
 This is handled by the `setup_vault.sh` script.
@@ -23,7 +23,7 @@ Relevant code ➡️ [here](https://github.com/scholar-of-artifice/polyglot-secu
 
 ### 2) Enable Public Key Infrastructure (PKI) Engine
 Enable the PKI secrets engine at the default path (`pki/`).
-A PKI Engine is a system component that automates the creation, management, issuance and revocation of certificates and keys. It acts as the CA to establish trust, secure communication and verify identites for application services.
+A PKI Engine is a system component that automates the creation, management, issuance and revocation of certificates and keys. It acts as the CA to establish trust, secure communication and verify identities for application services.
 
 Relevant code ➡️ [here](https://github.com/scholar-of-artifice/polyglot-security-foundations/blob/dbd1732782b1edad3f233c49eede0a98d13361c5/setup_vault.sh#L39-L44)
 
@@ -35,9 +35,9 @@ Relevant code ➡️ [here](https://github.com/scholar-of-artifice/polyglot-secu
 
 ### 4) Role Definition
 We define distinct roles for each service.
-Roles act as guardrails and place contraints such as:
+Roles act as guardrails and place constraints such as:
 
-Just `overwhelming-minotaur` ➡️ [here](https://github.com/scholar-of-artifice/polyglot-security-foundations/blob/dbd1732782b1edad3f233c49eede0a98d13361c5/setup_vault.sh#L63-L73)
+`overwhelming-minotaur` ➡️ [here](https://github.com/scholar-of-artifice/polyglot-security-foundations/blob/dbd1732782b1edad3f233c49eede0a98d13361c5/setup_vault.sh#L63-L73)
 
 #### Allowed Domains 
 A service cannot request for a domain it does not own.

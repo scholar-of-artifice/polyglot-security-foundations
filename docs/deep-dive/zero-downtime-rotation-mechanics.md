@@ -24,13 +24,13 @@ You can imagine how inconvenient this is in the modern world where applications 
 
 Even highly optimized, light weight containers take non-zero time to initialize. Some image has to be downloaded, read from storage, initialized, and some IO is partitioned. During this time, the service is not available and is effectively down.
 
-If you scale this to hundreds of component services, databases, caches, load balncers, and other infrastructure then the cumulative availablity drop becomes significant.
+If you scale this to hundreds of component services, databases, caches, load balancers, and other infrastructure then the cumulative availability drop becomes significant.
 
 #### An Overwhelming Stampede
 
 Also, if certificate issuance is synchronized... a restart based strategy would force your entire fleet of deployed applications to reboot at the same time.
 
-This causes a massive spike in usage across your cluster of machines and overwhelm upstream dependencies. Possibly you can effectively DDOS yourself.
+This causes a massive spike in usage across your cluster of machines and overwhelms upstream dependencies. Possibly you can effectively DDOS yourself.
 
 ### How can we address short credential lifespans without container restarts?
 
@@ -97,40 +97,21 @@ However, if we need to support credential rotation, we cannot instantiate the co
 
 The standard logic has been wrapped in a custom type called `MTLSContextManager`. The implementation is here: [`MTLSContextManager.py`](../../siege-leviathan/app/core/MTLSContextManager.py).
 
-Instead of relying on the web framework to handle SSL, there needs to be an explicit management of the context lifecylce. This 
-
-##
-
-## Edge Cases & Safety
-
-<!--TODO-->
-
-### Handling File System Race Conditions
-
-<!--TODO-->
+Instead of relying on the web framework to handle SSL, there needs to be an explicit management of the context lifecycle.
+The `MTLSContextManager` wraps the loading logic in a `try... except` block catching `ssl.SSLError` and `OSError`.
+If a partial write is detected, it catches the exception, logs a warning, and falls back to the existing `ssl_context`.
+This means the service does not crash during rotation.
 
 ### What Happens to in-flight requests?
 
-<!--TODO-->
+The system swaps the configuration structs in memory (`overwhelming-minotaur`) or the `SSLContext` object (`siege-leviathan`).
+Therefore, existing connections continue to use the *old* object until they close.
+Only *new* connections initiated after the swap will use the new certificate.
+This allows connections to not be dropped.
+Of course, given some modification you can force connections to drop.
 
 ### Graceful Degradation
 
-<!--TODO-->
-
-## Verification
-
-<!--TODO-->
-
-### Simulating Credential Rotation
-
-<!--TODO-->
-
-### Log Analysis: Confirming the "Reload" Event
-
-<!--TODO-->
-
-<!--
-## What happens when a certificate expires while a connection is active?
-## How does the Go service work?
-## What are the tradeoffs
--->
+If the **Vault Agent** fails to renew the certificate, the application continues to use the old credential.
+This provides a buffer period for someone to fix the infrastructure.
+However, you only have the remaining TTL of the cert to do this.
