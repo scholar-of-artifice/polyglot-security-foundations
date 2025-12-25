@@ -111,24 +111,9 @@ flowchart LR
 
 ## ⚡️ Quick Start Guide
 
-### Prerequisites
-- Docker and Docker Compose: https://www.docker.com
-
-### Get the code
-- Download this repository
-
-### Run the System
-- Open this directory in your terminal instance
-- Run the following command
-```bash
-docker compose up --build
-```
-
-### What to Observe
-- Success: `siege-leviathan` logs `overwhelming_minotaur_responds: ...`
-    - Handshake success
-- Rejection: `reckless-sleuth` logs `connections rejected: remote error: tls: bad certificate
-    - Security boundary intact
+Here is a link to my quickstart guide.
+I think it is better practice to keep directions for such things in specific documents.
+[Quick Start Guide](/docs/deep-dive/quick-start-guide.md)
 
 ## 📚 Documentation
 
