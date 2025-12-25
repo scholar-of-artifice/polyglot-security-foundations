@@ -22,6 +22,6 @@ https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Transport_Layer_S
 
 https://wiki.mozilla.org/Security/Server_Side_TLS
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/b38k2GiLDdc?si=m_38AH1JBhTAT5BH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+https://www.youtube.com/embed/b38k2GiLDdc?si=m_38AH1JBhTAT5BH
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/uWmZZyaHFEY?si=m6z0l9WXEHYg_9CB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+https://www.youtube.com/embed/uWmZZyaHFEY?si=m6z0l9WXEHYg_9CB
