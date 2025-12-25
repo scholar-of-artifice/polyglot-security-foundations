@@ -25,7 +25,7 @@ Instead of relying on static, long-lived, `.pem` files that are easily compromis
 ## 🏄‍♂️ Engineering Highlights
 
 ### 1) Dynamic Secret Injection
-Certificates in this environment have a strict **24-hour** lifespans. Instead of hard coded credentials, **Vault Agents** run as sidecars to the application containers. They handle the authentication with Vault, fetch the certificates and render them to a shared volume.
+Certificates in this environment have strict **24-hour** lifespans. Instead of hard coded credentials, **Vault Agents** run as sidecars to the application containers. They handle the authentication with Vault, fetch the certificates and render them to a shared volume.
 
 [Sidecar Pattern Explained](docs/deep-dive/sidecar-pattern-explained.md)
 
@@ -37,7 +37,7 @@ A critical challenge in mTLS is rotating certificates without killing active con
 ### 3) Infrastructure as Code (IaC)
 The entire Public Key Infrastructure is bootstrapped automatically via the `setup_vault.sh` script. This ensures the security environment is ephemeral and idempotent which complies with cloud-native practices.
 
-[Infrastructure as Code Boostrapping](docs/deep-dive/infrastructure-as-code-bootstrapping.md)
+[Infrastructure as Code Bootstrapping](docs/deep-dive/infrastructure-as-code-bootstrapping.md)
 
 ### 4) Multiple Technology Showcase
 No matter if you use Go or Python, I have tried to demonstrate basic procedures you will likely need to adopt in your project.
@@ -105,9 +105,9 @@ flowchart LR
 ### Components
 
 - **Hashicorp Vault** HashiCorp Vault is the PKI Engine which acts as an internal CA.
-- **overwhelming-minotaur** A a secure backend server written in `Go` which enforces `mTLS`.
+- **overwhelming-minotaur** A secure backend server written in `Go` which enforces `mTLS`.
 - **siege-leviathan** A client application using `Python` and `FastAPI` to make `TLS` authenticated requests to the `overwhelming-minotaur`.
-- **reckless-sleuth** An application written in `Go` to simulate unwelcome agents. It serves as a negative test to prove that that unauthenticated traffic is rejected from `overwhelming-minotaur`.
+- **reckless-sleuth** An application written in `Go` to simulate unwelcome agents. It serves as a negative test to prove that unauthenticated traffic is rejected from `overwhelming-minotaur`.
 
 ## ⚡️ Quick Start Guide
 

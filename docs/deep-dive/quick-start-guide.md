@@ -1,7 +1,7 @@
 # Quick Start Guide
 
 In this article, you will find the directions for getting this application up and running.
-I wrote this as a seperate article so that it is easier on the eyes.
+I wrote this as a separate article so that it is easier on the eyes.
 
 ## Directions
 
@@ -37,10 +37,10 @@ docker compose up --build
 
 #### Explanation
 This will tell `docker` to look for the `docker-compose` file and build the project.
-It will likely pull several image from docker hub including `hashicorp/vault`.
+It will likely pull several images from docker hub including `hashicorp/vault`.
 
 ### What to Observe
 - Success: `siege-leviathan` logs `overwhelming_minotaur_responds: ...`
     - Handshake success
-- Rejection: `reckless-sleuth` logs `connections rejected: remote error: tls: bad certificate
+- Rejection: `reckless-sleuth` logs `connections rejected: remote error: tls: bad certificate`
     - Security boundary intact
