@@ -6,9 +6,9 @@ In this article, you will learn about the sidecar architecture pattern and its r
 
 ## What is the Sidecar Pattern?
 
-The Sidecar architecture pattern involves deploying a auxiliary application alongside a target (primary) applicaiton. These application live in distinct containers but are networked together.
+The Sidecar architecture pattern involves deploying a auxiliary application alongside a target (primary) application. These application live in distinct containers but are networked together.
 
-In this proeject, a **Vault Agent** sidecar runs next to every service.
+In this project, a **Vault Agent** sidecar runs next to every service.
 
 ### Example
 > `vault-agent-overwhelming-minotaur` runs as a sidecar for `overwhelming-minotaur`.
@@ -44,14 +44,14 @@ There are many reasons but here are a few.
 The tokens used by the agent and the certificates it fetches are ephemeral. If they are leaked, they expire automatically in 24 hours. You can set this to whatever you want.
 
 ### 2) Decoupling
-The application code does not contain any logic for talking to **Vault**. This makes the application code more self contained. Your depenedncies become a lot simpler as you do not need specific drivers or libraries which is not the case with many cloud technologies.
+The application code does not contain any logic for talking to **Vault**. This makes the application code more self contained. Your dependencies become a lot simpler as you do not need specific drivers or libraries which is not the case with many cloud technologies.
 
 ### 3) Automatic Rotation
 The **Vault Agent** automatically renews the certificate before it expires and overwrites the file in the shared volume. This allows for the potential for zero-downtime key rotation.
 
 ## How does the "Auto-Authorization" method work in the sandbox?
 
-This project makes use of the `apprile` autho-auth method.
+This project makes use of the `approle` autho-auth method.
 1) The `setup_vault.sh` script write a `role_id` and `secret_id` to a specific folder on the host.
 2) The **Vault Agent** container mounts this folder at `/app/secrets/`
 3) When the system starts, the Agent reads the files to authenticate with Vault, obtains a token and begins managing the certificate lifecycle.

@@ -24,7 +24,7 @@ You can imagine how inconvenient this is in the modern world where applications 
 
 Even highly optimized, light weight containers take non-zero time to initialize. Some image has to be downloaded, read from storage, initialized, and some IO is partitioned. During this time, the service is not available and is effectively down.
 
-If you scale this to hundreds of component services, databases, caches, load balncers, and other infrastructure then the cumulative availablity drop becomes significant.
+If you scale this to hundreds of component services, databases, caches, load balancers, and other infrastructure then the cumulative availability drop becomes significant.
 
 #### An Overwhelming Stampede
 
@@ -104,7 +104,7 @@ This means the service does not crash during rotation.
 
 ### What Happens to in-flight requests?
 
-The system swaps the configuration structs in memory (`overwhelming-minotaur`) or the `SSLContext` object (`siege-levaithan`).
+The system swaps the configuration structs in memory (`overwhelming-minotaur`) or the `SSLContext` object (`siege-leviathan`).
 Therefore, existing connections continue to use the *old* object until they close.
 Only *new* connections initiated after the swap will use the new certificate.
 This allows connections to not be dropped.
