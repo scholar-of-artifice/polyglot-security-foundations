@@ -97,40 +97,21 @@ However, if we need to support credential rotation, we cannot instantiate the co
 
 The standard logic has been wrapped in a custom type called `MTLSContextManager`. The implementation is here: [`MTLSContextManager.py`](../../siege-leviathan/app/core/MTLSContextManager.py).
 
-Instead of relying on the web framework to handle SSL, there needs to be an explicit management of the context lifecylce. This 
-
-##
-
-## Edge Cases & Safety
-
-<!--TODO-->
-
-### Handling File System Race Conditions
-
-<!--TODO-->
+Instead of relying on the web framework to handle SSL, there needs to be an explicit management of the context lifecylce.
+The `MTLSContextManager` wraps the loading logic in a `try... except` block catching `ssl.SSLError` and `OSError`.
+If a partial write is detected, it catches the exception, logs a warning, and falls back to the existing `ssl_context`.
+This means the service does not crash during rotation.
 
 ### What Happens to in-flight requests?
 
-<!--TODO-->
+The system swaps the configuration structs in memory (`overwhelming-minotaur`) or the `SSLContext` object (`siege-levaithan`).
+Therefore, existing connections continue to use the *old* object until they close.
+Only *new* connections initiated after the swap will use the new certificate.
+This allows connections to not be dropped.
+Of course, given some modification you can force connections to drop.
 
 ### Graceful Degradation
 
-<!--TODO-->
-
-## Verification
-
-<!--TODO-->
-
-### Simulating Credential Rotation
-
-<!--TODO-->
-
-### Log Analysis: Confirming the "Reload" Event
-
-<!--TODO-->
-
-<!--
-## What happens when a certificate expires while a connection is active?
-## How does the Go service work?
-## What are the tradeoffs
--->
+If the **Vault Agent** fails to renew the certificate, the application continues to use the old credential.
+This provides a buffer period for someone to fix the infrastructure.
+However, you only have the remaining TTL of the cert to do this.
