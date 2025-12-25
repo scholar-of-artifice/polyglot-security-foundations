@@ -132,7 +132,7 @@ docker compose up --build
 
 ## 📚 Documentation
 
-- For a deeper explanation of how **mTLS** works... [What is mTLS?](docs/deep-dive/what-is-mTLS.md)
+- Want to know how mTLS works?... [mTLS Explained](docs/deep-dive/mTLS-explained.md)
 - Want to know about the **Sidecar Architecture Pattern** in this project?... [Sidecar Pattern Explained](docs/deep-dive/sidecar-pattern-explained.md)
 - Want to know how **Zero Downtime Key Rotation** works?... [Zero Downtime Rotation Mechanics](docs/deep-dive/zero-downtime-rotation-mechanics.md)
 - Want a deeper explanation of `setup_vault.sh`?... [Infrastructure as Code Boostrapping](docs/deep-dive/infrastructure-as-code-bootstrapping.md)
