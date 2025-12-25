@@ -1,4 +1,7 @@
 # Sidecar Pattern Explained
+
+> *Help each other, encourage each other, lift each other up. -Ed Reed*
+
 In this article, you will learn about the sidecar architecture pattern and its relation to `vault-agent`.
 
 ## What is the Sidecar Pattern?
