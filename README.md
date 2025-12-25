@@ -1,6 +1,6 @@
-# Dynamic mTLS Microservices Sandbox
+# Polyglot Security Foundations
 
-A polyglot microservices environment demonstrating "Day 2" security operations with automated, short-lived certificate rotation and a centralized Public Key Iinfrastructure (PKI).
+> **A Zero-Trust orchestration sandbox demonstrating automated mTLS and secret rotation across Go and Python microservices.**
 
 ## 🧑‍💻 Technologies
 <!--technology badges here-->
@@ -16,9 +16,9 @@ A polyglot microservices environment demonstrating "Day 2" security operations w
 
 ## 🔐 Why This Matters
 
-Tansport Layer Security (TLS) is the backbone of the secure web. However, it is often treated as a `black box` handled by cloud providers.
+Transport Layer Security (TLS) is the backbone of the secure web. However, it is often treated as a `black box` handled by cloud providers.
 
-This project demonsrates a **Zero Trust** architecture implemented from the ground up. By running this project you can create a locally running sandbox environment which implements and automates mutual TLS. You can experiment and debug this to your heart's content.
+This project demonstrates a **Zero Trust** architecture implemented from the ground up. By running this project you can create a locally running sandbox environment which implements and automates mutual TLS. You can experiment and debug this to your heart's content.
 
 Instead of relying on static, long-lived, `.pem` files that are easily compromised, this system uses **HashiCorp Vault** to act as an internal Certificate Authority (CA). **Vault** automatically issues, rotates, and revokes short-lived identity certificates for these services written in different languages, proving that standardized security can be both rigorous and automated.
 
@@ -27,11 +27,17 @@ Instead of relying on static, long-lived, `.pem` files that are easily compromis
 ### 1) Dynamic Secret Injection
 Certificates in this environment have a strict **24-hour** lifespans. Instead of hard coded credentials, **Vault Agents** run as sidecars to the application containers. They handle the authentication with Vault, fetch the certificates and render them to a shared volume.
 
+[Sidecar Pattern Explained](docs/deep-dive/sidecar-pattern-explained.md)
+
 ### 2) Zero-Downtime Rotation
-A critical challenge in mTLS is rotating certificates without killing active connections. Each service has a basic certifiation context managment mechanism.
+A critical challenge in mTLS is rotating certificates without killing active connections. Each service has a basic certification context management mechanism.
+
+[Zero Downtime Rotation Mechanics](docs/deep-dive/zero-downtime-rotation-mechanics.md)
 
 ### 3) Infrastructure as Code (IaC)
-The enture Public Key Infrastructure is bootstrapped automatically via the `setup_vault.sh` script. This ensures the security environment is ephemeral and idempotent which complies with cloud-native practices.
+The entire Public Key Infrastructure is bootstrapped automatically via the `setup_vault.sh` script. This ensures the security environment is ephemeral and idempotent which complies with cloud-native practices.
+
+[Infrastructure as Code Boostrapping](docs/deep-dive/infrastructure-as-code-bootstrapping.md)
 
 ### 4) Multiple Technology Showcase
 No matter if you use Go or Python, I have tried to demonstrate basic procedures you will likely need to adopt in your project.
@@ -100,7 +106,7 @@ flowchart LR
 
 - **Hashicorp Vault** HashiCorp Vault is the PKI Engine which acts as an internal CA.
 - **overwhelming-minotaur** A a secure backend server written in `Go` which enforces `mTLS`.
-- **siege-levaithan** A client application using `Python` and `FastAPI` to make `TLS` authenticated requests to the `overwhelming-minotaur`.
+- **siege-leviathan** A client application using `Python` and `FastAPI` to make `TLS` authenticated requests to the `overwhelming-minotaur`.
 - **reckless-sleuth** An application written in `Go` to simulate unwelcome agents. It serves as a negative test to prove that that unauthenticated traffic is rejected from `overwhelming-minotaur`.
 
 ## ⚡️ Quick Start Guide
@@ -126,7 +132,11 @@ docker compose up --build
 
 ## 📚 Documentation
 
+- For a deeper explanation of how **mTLS** works... [What is mTLS?](docs/deep-dive/what-is-mTLS.md)
+- Want to know about the **Sidecar Architecture Pattern** in this project?... [Sidecar Pattern Explained](docs/deep-dive/sidecar-pattern-explained.md)
+- Want to know how **Zero Downtime Key Rotation** works?... [Zero Downtime Rotation Mechanics](docs/deep-dive/zero-downtime-rotation-mechanics.md)
+- Want a deeper explanation of `setup_vault.sh`?... [Infrastructure as Code Boostrapping](docs/deep-dive/infrastructure-as-code-bootstrapping.md)
 
 ## 🔮 Future Roadmap
 - `OCaml` service to demonstrate non-HTTP protocols
-- `Orchestration` using `Kubernetes` and `Heml`
+- `Orchestration` using `Kubernetes` and `Helm`

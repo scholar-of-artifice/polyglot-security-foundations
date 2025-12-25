@@ -1,33 +1,27 @@
+# 🔐 What is mTLS?
 
-## 🔐 What is mTLS?
+> *Distrust and caution are the parents of security. -Benjamin Franklin*
 
 `mTLS` (Mutual Transport Layer Security) is a protocol that ensures two-way authentication between a client and a server. Unlike standard `TLS` (one-way TLS), where only the server verifies its identity to the client, `mTLS` requires both the client and the server to present and validate cryptographic certificates during the connection handshake.
 
-### Key Concepts
+## Key Concepts
 `mTLS` is essential for securing `API` gateways, service-to-service communication in microservices architectures (e.g., service mesh), and sensitive internal systems where strong identity verification is critical.
 
-#### Two-Way Authentication
+### Two-Way Authentication
 Both parties must verify the other's identity using their respective Public Key Infrastructure (`PKI`) certificates.
 
-#### Trust Establishment
+### Trust Establishment
 A secure connection is only established after both parties confirm the validity of the other's certificate, typically against a trusted Certificate Authority (`CA`).
 
-#### Enhanced Security
+### Enhanced Security
 By requiring the client to prove its identity, `mTLS` significantly improves security, preventing unauthorized access even if standard credential-based authentication (like usernames/passwords) is compromised or bypassed.
 
-## The Setup
+# Resources
 
-Here is an image which shows the services in this application.
+https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Transport_Layer_Security
 
-![Image of Project Setup](https://github.com/scholar-of-artifice/mTLS-example/blob/main/docs/assets/images/mTLS-example-image.png)
+https://wiki.mozilla.org/Security/Server_Side_TLS
 
-### What is going on?
-Service `siege-leviathan` is a service written with `Python` `FastAPI`. Service `overwhelming-minotaur` is a service written with standard `Go`. Service `reckless-sleuth` is a service written with standard `Go`.
+https://www.youtube.com/watch?v=b38k2GiLDdc
 
-`siege-leviathan` and `overwhelming-minotaur` communicate via an encrypted connection with `mTLS`. `reckless-sleuth` cannot read the communication between `siege-leviathan` and `overwhelming-minotaur`.
-
-## Resources
-
-https://youtu.be/b38k2GiLDdc?si=OEbBRe6AxxLCOL3w
-
-https://youtu.be/uWmZZyaHFEY?si=dqc0obIQRsAYaoSr
+https://www.youtube.com/watch?v=uWmZZyaHFEY
